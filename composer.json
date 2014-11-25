@@ -1,6 +1,6 @@
 {
     "name": "comodojo/cookies",
-    "description": "A cross (secure) cookies setter/getter",
+    "description": "A simple lib to manage (secure) cookies",
     "license": "GPL-3.0+",
     "type": "library",
     "keywords": [
@@ -9,7 +9,7 @@
         "cookie",
         "comodojo"
     ],
-    "homepage": "http://www.comodojo.org",
+    "homepage": "http://comodojo.org",
      "support": {
         "issues": "https://github.com/comodojo/cookies/issues"
     },
