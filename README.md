@@ -1,7 +1,7 @@
 comodojo/cookies
 ================
 
-A cross (secure) cookies setter/getter 
+A simple lib to manage (secure) cookies
 
 ## Introduction
 
