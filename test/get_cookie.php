@@ -6,56 +6,117 @@ require '../vendor/autoload.php';
 
 ob_start();
 
+
 echo '<h1>Comodojo::Cookies tests - GET</h1>';
 
 echo '<p>Getting plain cookie:</p>';
 
-$result = Cookies::get();
+try {
 
-echo '<pre style="color: green;"> '.$result.'</pre>';
+	$result = Cookies::get(); 
+	
+	echo '<pre style="color: green;">';
 
-echo '</p>';
+	var_export($result);
+
+	echo '</pre>';
+
+} catch (\Exception $e) {
+
+	echo '<pre style="color: red;">'.$e->getMessage().'</pre>'; 
+
+}
+
 
 echo '<p>Getting encrypted cookie:</p>';
 
-$result = Cookies::get("comodojo_encrypted", "thisismyverycomplexpassword");
+try { 
 
-echo '<pre style="color: green;"> '.$result.'</pre>';
+	$result = Cookies::get("comodojo_encrypted", "thisismyverycomplexpassword"); 
+
+	echo '<pre style="color: green;">';
+
+	var_export($result);
+
+	echo '</pre>';
+
+} catch (\Exception $e) { 
+
+	echo '<pre style="color: red;">'.$e->getMessage().'</pre>';
+
+}
+
 
 echo '<p>Getting array in plain cookie:</p>';
 
-$result = Cookies::get("comodojo_array");
+try { 
 
-echo '<pre style="color: green;">';
+	$result = Cookies::get("comodojo_array"); 
 
-var_export($result);
+	echo '<pre style="color: green;">';
 
-echo '</pre>';
+	var_export($result);
+
+	echo '</pre>';
+
+} catch (\Exception $e) { 
+
+	echo '<pre style="color: red;">'.$e->getMessage().'</pre>';
+
+}
+
 
 echo '<p>Getting array in encrypted cookie:</p>';
 
-$result = Cookies::get("comodojo_encrypted_array", "thisismyverycomplexpassword");
+try { 
 
-echo '<pre style="color: green;">';
+	$result = Cookies::get("comodojo_encrypted_array", "thisismyverycomplexpassword"); 
 
-var_export($result);
+		echo '<pre style="color: green;">';
 
-echo '</pre>';
+	var_export($result);
+
+	echo '</pre>';
+
+} catch (\Exception $e) { 
+
+	echo '<pre style="color: red;">'.$e->getMessage().'</pre>';
+
+}
+
 
 echo '<p>Getting 10 seconds valid cookie:</p>';
 
-$result = Cookies::get("comodojo_short_cookie");
+try { 
 
-echo '<pre style="color: green;">';
+	$result = Cookies::get("comodojo_short_cookie"); 
 
-var_export($result);
+	echo '<pre style="color: green;">';
 
-echo '</pre>';
+	var_export($result);
+
+	echo '</pre>';
+
+} catch (\Exception $e) { 
+
+	echo '<pre style="color: red;">'.$e->getMessage().'</pre>';
+
+}
+
 
 echo '<p>Getting invalid cookie</p>';
 
-$result = Cookies::get("comodojo_fake_cookie");
+try {
 
-echo '<pre style="color: red;">'. (is_null($result) ? 'NULL' : $result) .'</pre>';
+	$result = Cookies::get("comodojo_fake_cookie"); 
+
+	echo '<pre style="color: green;">'. (is_null($result) ? 'NULL' : $result) .'</pre>';
+
+}
+catch (\Exception $e) { 
+
+	echo '<pre style="color: red;">'.$e->getMessage().'</pre>';
+
+}
 
 ob_end_flush();

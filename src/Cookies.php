@@ -28,7 +28,7 @@ use \Comodojo\Exception\CookiesException;
 class Cookies {
 
     /**
-     * Default static content for cookie
+     * Default static content for setcookie()
      *
      * @var array
      */
@@ -42,6 +42,15 @@ class Cookies {
         "httponly"  =>  false
     );
 
+    /**
+     * Set a cookie, in plain or encrypted form
+     *
+     * @param   mixed   $cookie   Cookie value (if string) or cookie data array (if array)
+     * @param   string  $key      (optional) password to trigger a secure cookie setup
+     * 
+     * @return  bool    True in case of success, false otherwise
+     * @throws  CookiesException
+     */
     static public function set($cookie, $key=null) {
 
         $cookie_parameters = is_array($cookie) ? array_replace(self::$data, $cookie) : array_replace(self::$data, array('value' => $cookie) );
@@ -50,7 +59,9 @@ class Cookies {
 
             $cipher = new \Crypt_AES(CRYPT_AES_MODE_ECB);
 
-            $cipher->setPassword($key);
+            $cipher->setKeyLength(256);
+
+            $cipher->setKey( self::clientSpecificKey($key) );
 
             $cookie_parameters['value'] = $cipher->encrypt( serialize($cookie_parameters['value']) );
 
@@ -60,10 +71,29 @@ class Cookies {
 
         }
 
-        return self::setCookie($cookie_parameters);
+        try {
+            
+            $result = self::setCookie($cookie_parameters);
+
+        } catch (CookiesException $ce) {
+            
+            throw $ce;
+
+        }
+
+        return $result;
 
     }
 
+    /**
+     * Get a cookie, from plain or encrypted format
+     *
+     * @param   string  $name   (optional) The cookie name; if null, default will be used
+     * @param   string  $key    (optional) password to trigger a secure cookie retrieve
+     * 
+     * @return  mixed   Cookie value in case it's on the client, null otherwise
+     * @throws  CookiesException
+     */
     static public function get($name=null, $key=null) {
 
         $cookie = self::getCookie( is_null($name) ? self::$data['name'] : $name );
@@ -72,9 +102,13 @@ class Cookies {
 
             $cipher = new \Crypt_AES(CRYPT_AES_MODE_ECB);
 
-            $cipher->setPassword($key);
+            $cipher->setKeyLength(256);
+
+            $cipher->setKey( self::clientSpecificKey($key) );
 
             $cookie = $cipher->decrypt($cookie);
+
+            if ( $cookie === false ) throw new CookiesException("Cookie data cannot be dectypted");
 
         }
 
@@ -82,13 +116,31 @@ class Cookies {
 
     }
 
+    /**
+     * Delete a cookie (set it as expired 24h ago)
+     *
+     * @param   mixed   $cookie   Cookie value (if string) or cookie data array (if array)
+     * 
+     * @return  bool    True in case of success, false otherwise
+     * @throws  CookiesException
+     */
     static public function delete($cookie=null) {
 
-        $cookie_parameters = is_array($cookie) ? array_replace(self::$data, $cookie) : array_replace(self::$data, array('value' => $cookie) );
+        $cookie_parameters = is_array($cookie) ? array_replace(self::$data, $cookie) : array_replace(self::$data, array('name' => $cookie) );
 
         $cookie_parameters['expire'] = time() - 86400;
 
-        return self::setCookie($cookie_parameters);
+        try {
+            
+            $result = self::setCookie($cookie_parameters);
+
+        } catch (CookiesException $ce) {
+            
+            throw $ce;
+
+        }
+
+        return $result;
 
     }
 
@@ -113,6 +165,16 @@ class Cookies {
         if ( isset($_COOKIE[$name]) ) return $_COOKIE[$name];
 
         else return null;
+
+    }
+
+    static private function clientSpecificKey($key) {
+
+        $client_hash = md5($_SERVER['REMOTE_ADDR'] . ( isset($_SERVER['HTTP_X_FORWARDED_FOR']) ? $_SERVER['HTTP_X_FORWARDED_FOR'] : '' ), true);
+
+        $server_hash = md5($key, true);
+
+        return $client_hash . $server_hash;
 
     }
 
