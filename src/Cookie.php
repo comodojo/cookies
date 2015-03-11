@@ -1,6 +1,6 @@
 <?php namespace Comodojo\Cookies;
 
-use Comodojo\Cookies\Interface\CookieInterface;
+use \Comodojo\Cookies\Interface\CookieInterface;
 use \Comodojo\Exception\CookiesException;
 
 /**
@@ -251,11 +251,11 @@ class Cookie implements CookieInterface {
 
     }
 
-    public function get() {
+    public function get($unserialize = true) {
 
-        if ( isset($_COOKIE[$this->name]) ) return $_COOKIE[$this->name];
+        if ( !isset($_COOKIE[$this->name]) ) throw new CookiesException("Cookie cannot be found");
 
-        else return null;
+        return ( $unserialize === true ) ? unserialize($_COOKIE[$this->name]) ? $_COOKIE[$this->name];
 
     }
 
@@ -273,19 +273,23 @@ class Cookie implements CookieInterface {
 
     }
 
-    static public function set($name, $properties) {
+    static public function set($name, $properties=array()) {
 
         try {
 
             $cookie = new Cookie($name);
+
+            self::cookieProperties($cookie, $properties);
             
-            $value = $cookie->get();
+            $value = $cookie->set();
 
         } catch (CookiesException $ce) {
             
             throw new $ce;
 
         }
+
+        return $value;
 
     }
 
@@ -322,6 +326,56 @@ class Cookie implements CookieInterface {
         }
 
         return $value;
+
+    }
+
+    static protected function cookieProperties(\Comodojo\Cookies\Interface\CookieInterface $cookie, $properties) {
+
+        foreach ($properties as $property => $value) {
+                
+            switch ($property) {
+
+                case 'value':
+                    
+                    $cookie->setValue($value);
+
+                    break;
+
+                case 'expire':
+
+                    $cookie->setExpire($value);
+
+                    break;
+
+                case 'path':
+
+                    $cookie->setPath($value);
+
+                    break;
+
+                case 'domain':
+
+                    $cookie->setDomain($value);
+
+                    break;
+
+                case 'secure':
+
+                    $cookie->setSecure($value);
+
+                    break;
+
+                case 'httponly':
+
+                    $cookie->setHttponly($value);
+
+                    break;
+
+            }
+
+        }
+
+        return $cookie;
 
     }
 
