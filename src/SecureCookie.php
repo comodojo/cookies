@@ -1,8 +1,8 @@
 <?php namespace Comodojo\Cookies;
 
 use \Comodojo\Cookies\Cookie;
-use \Comodojo\Exception\CookiesException;
-use \Comodojo\Cookies\Interface\CookieInterface;
+use \Comodojo\Exception\CookieException;
+use \Comodojo\Cookies\CookieInterface\CookieInterface;
 
 /**
  * Plain cookie
@@ -33,7 +33,7 @@ class SecureCookie extends Cookie implements CookieInterface {
 
 	public function __construct($name, $key) {
 
-		if ( empty($key) OR !is_scalar($key) ) throw new CookiesException("Invalid secret key");
+		if ( empty($key) OR !is_scalar($key) ) throw new CookieException("Invalid secret key");
 
 		$this->key = $key;
 
@@ -43,7 +43,7 @@ class SecureCookie extends Cookie implements CookieInterface {
 
 		} catch (CookieException $ce) {
 			
-			throw $ce
+			throw $ce;
 
 		}
 
@@ -75,31 +75,13 @@ class SecureCookie extends Cookie implements CookieInterface {
 
         $cookie = $cipher->decrypt($this->value);
 
-        if ( $cookie === false ) throw new CookiesException("Cookie data cannot be dectypted");
+        if ( $cookie === false ) throw new CookieException("Cookie data cannot be dectypted");
 
         return ( $unserialize === true ) ? unserialize($cookie) : $cookie;
 
     }
 
-    public function get($unserialize = true) {
-
-    	if ( !isset($_COOKIE[$this->name]) ) throw new CookiesException("Cookie cannot be found");
-
-        $cipher = new \Crypt_AES(CRYPT_AES_MODE_ECB);
-
-        $cipher->setKeyLength(256);
-
-        $cipher->setKey( self::clientSpecificKey($this->key) );
-
-        $cookie = $cipher->decrypt($_COOKIE[$this->name]);
-
-        if ( $cookie === false ) throw new CookiesException("Cookie data cannot be dectypted");
-
-        return ( $unserialize === true ) ? unserialize($cookie) : $cookie;
-
-    }
-
-    static public function set($name, $properties=array(), $key) {
+    static public function setCookie($name, $properties=array(), $key) {
 
     	try {
 
@@ -109,7 +91,7 @@ class SecureCookie extends Cookie implements CookieInterface {
             
             $value = $cookie->set();
 
-        } catch (CookiesException $ce) {
+        } catch (CookieException $ce) {
             
             throw new $ce;
 
@@ -119,7 +101,7 @@ class SecureCookie extends Cookie implements CookieInterface {
 
     }
 
-    static public function get($name, $key) {
+    static public function getCookie($name, $key) {
 
     	try {
 
@@ -127,7 +109,7 @@ class SecureCookie extends Cookie implements CookieInterface {
             
             $value = $cookie->get();
 
-        } catch (CookiesException $ce) {
+        } catch (CookieException $ce) {
             
             throw new $ce;
 

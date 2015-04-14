@@ -1,7 +1,7 @@
 <?php namespace Comodojo\Cookies;
 
-use \Comodojo\Cookies\Interface\CookieInterface;
-use \Comodojo\Exception\CookiesException;
+use \Comodojo\Cookies\CookieInterface\CookieInterface;
+use \Comodojo\Exception\CookieException;
 
 /**
  * Plain cookie
@@ -29,14 +29,16 @@ use \Comodojo\Exception\CookiesException;
 class Cookie implements CookieInterface {
 
     /*
+     * The cookie name
      *
-     * @var
+     * @var string
      */
     private $name = null;
 
     /*
+     * Cookie value (native string or serialized one)
      *
-     * @var
+     * @var string
      */
     private $value = null;
 
@@ -70,13 +72,22 @@ class Cookie implements CookieInterface {
      */
     private $httponly = false;
 
+    /**
+     * Cookie constructor
+     *
+     * Setup cookie name
+     *
+     * @param   string   $name
+     *
+     * @throws \Comodojo\Exception\CookieException
+     */
     public function __construct($name) {
 
         try {
 
             $this->setName($name);
             
-        } catch (CookiesException $ce) {
+        } catch (CookieException $ce) {
             
             throw $ce;
 
@@ -84,9 +95,18 @@ class Cookie implements CookieInterface {
 
     }
 
+    /**
+     * Set cookie name
+     *
+     * @param   string  $cookieName    The cookie name
+     *
+     * @return  Object  $this
+     *
+     * @throws \Comodojo\Exception\CookieException
+     */
     public function setName($name) {
 
-        if ( empty($name) OR !is_scalar($name) ) throw new CookiesException("Invalid cookie name");
+        if ( empty($name) OR !is_scalar($name) ) throw new CookieException("Invalid cookie name");
 
         $this->name = $name;
 
@@ -94,17 +114,34 @@ class Cookie implements CookieInterface {
 
     }
 
+    /**
+     * Get cookie name
+     *
+     * @return  string
+     */
     public function getName() {
 
         return $this->name;
 
     }
 
+    /**
+     * Set cookie content
+     *
+     * @param   mixed   $cookieValue    Cookie content
+     * @param   bool    $serialize      If true (default) cookie will be serialized first
+     *
+     * @return  Object  $this
+     *
+     * @throws \Comodojo\Exception\CookieException
+     */
     public function setValue($value, $serialize=true) {
+
+        if ( !is_scalar($value) AND $serialize !== true ) throw new CookieException("Cannot set non-scalar value without serialization");
 
         if ( $serialize === true ) $value = serialize($value);
 
-        if ( strlen($value) > 4096 ) throw new CookiesException("Cookie data size is larger than 4KB");
+        if ( strlen($value) > 4096 ) throw new CookieException("Cookie size larger than 4KB");
 
         $this->value = $value;
 
@@ -112,13 +149,31 @@ class Cookie implements CookieInterface {
 
     }
 
+    /**
+     * Get cookie content
+     *
+     * @param   bool    $unserializes    If true (default) cookie will be unserialized first
+     *
+     * @return  mixed
+     */
     public function getValue($unserialize=true) {
 
         return ( $unserialize === true ) ? unserialize($this->value) : $this->value;
 
     }
 
+    /**
+     * Set cookie's expiration time
+     *
+     * @param   int     $timestamp
+     *
+     * @return  Object  $this
+     *
+     * @throws \Comodojo\Exception\CookieException
+     */
     public function setExpire($timestamp) {
+
+        if ( !is_int($timestamp) ) throw new CookieException("Invalud cookie's expiration time");
 
         $this->expire = $timestamp;
 
@@ -126,6 +181,11 @@ class Cookie implements CookieInterface {
 
     }
 
+    /**
+     * Get the time the cookie will expire
+     *
+     * @return  integer
+     */
     public function getExpire() {
 
         return $this->expire;
@@ -138,10 +198,12 @@ class Cookie implements CookieInterface {
      * @param   string  $location
      *
      * @return  Object  $this
+     *
+     * @throws \Comodojo\Exception\CookieException
      */
     public function setPath($location) {
 
-        if ( !is_string($location) ) throw new CookiesException("Invalid path attribute for a cookie");
+        if ( !is_string($location) ) throw new CookieException("Invalid path attribute for a cookie");
         
         $this->path = $path;
 
@@ -165,11 +227,13 @@ class Cookie implements CookieInterface {
      *
      * @param   string  $domain
      *
-     * @return  ObjectRequest   $this
+     * @return  Object   $this
+     *
+     * @throws \Comodojo\Exception\CookieException
      */
     public function setDomain($domain) {
 
-        if ( !filter_var($domain, FILTER_VALIDATE_URL) ) throw new CookiesException("Invalid domain attribute for a cookie");
+        if ( !filter_var($domain, FILTER_VALIDATE_URL) ) throw new CookieException("Invalid domain attribute for a cookie");
 
         $this->domain = $domain;
 
@@ -236,10 +300,16 @@ class Cookie implements CookieInterface {
 
     }
 
-
+    /**
+     * Set cookie
+     *
+     * @return bool
+     *
+     * @throws \Comodojo\Exception\CookieException
+     */
     public function set() {
 
-        return setcookie(
+        if ( setcookie(
             $this->name,
             $this->value,
             $this->expire,
@@ -247,21 +317,34 @@ class Cookie implements CookieInterface {
             $this->domain,
             $this->secure,
             $this->httponly
-        );
+        ) === false ) throw new CookieException("Cannot set cookie: ".$this->name);
+
+        return true;
 
     }
 
-    public function get($unserialize = true) {
+    /**
+     * Get cookie content from request
+     *
+     * Other parameters (like expire time) will be erased if cookie exists
+     *
+     * @return Object $this
+     *
+     * @throws \Comodojo\Exception\CookieException
+     */
+    public function get() {
 
-        if ( !isset($_COOKIE[$this->name]) ) throw new CookiesException("Cookie cannot be found");
+        if ( !isset($_COOKIE[$this->name]) ) throw new CookieException("Cookie cannot be found");
 
-        return ( $unserialize === true ) ? unserialize($_COOKIE[$this->name]) ? $_COOKIE[$this->name];
+        $this->setValue( $_COOKIE[$this->name] );
+
+        return $this;
 
     }
 
     public function delete() {
 
-        return setcookie(
+        if ( setcookie(
             $this->name,
             null,
             time() - 86400,
@@ -269,11 +352,24 @@ class Cookie implements CookieInterface {
             null,
             $this->secure,
             $this->httponly
-        );
+        ) === false ) throw new CookieException("Cannot delete cookie: ".$this->name);
+
+        return true;
 
     }
 
-    static public function set($name, $properties=array()) {
+    /**
+     * Check if cookie exists
+     *
+     * @return  bool
+     */
+    public function exists() {
+
+        reutrn isset( $_COOKIE[$this->name] );
+
+    }
+
+    static public function setCookie($name, $properties=array()) {
 
         try {
 
@@ -283,7 +379,7 @@ class Cookie implements CookieInterface {
             
             $value = $cookie->set();
 
-        } catch (CookiesException $ce) {
+        } catch (CookieException $ce) {
             
             throw new $ce;
 
@@ -293,7 +389,7 @@ class Cookie implements CookieInterface {
 
     }
 
-    static public function get($name) {
+    static public function getCookie($name) {
 
         try {
 
@@ -301,7 +397,7 @@ class Cookie implements CookieInterface {
             
             $value = $cookie->get();
 
-        } catch (CookiesException $ce) {
+        } catch (CookieException $ce) {
             
             throw new $ce;
 
@@ -311,7 +407,7 @@ class Cookie implements CookieInterface {
 
     }
 
-    static public function delete($name) {
+    static public function deleteCookie($name) {
 
         try {
 
@@ -319,7 +415,7 @@ class Cookie implements CookieInterface {
             
             $value = $cookie->delete();
 
-        } catch (CookiesException $ce) {
+        } catch (CookieException $ce) {
             
             throw new $ce;
 
@@ -329,7 +425,7 @@ class Cookie implements CookieInterface {
 
     }
 
-    static protected function cookieProperties(\Comodojo\Cookies\Interface\CookieInterface $cookie, $properties) {
+    static protected function cookieProperties(\Comodojo\Cookies\CookieInterface\CookieInterface $cookie, $properties) {
 
         foreach ($properties as $property => $value) {
                 
