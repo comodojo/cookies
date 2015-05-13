@@ -4,84 +4,175 @@ use \Comodojo\Cookies\CookieInterface\CookieInterface;
 use \Comodojo\Exception\CookieException;
 
 /**
- * Plain cookie
+ * Manage multiple cookies of different types at one time
  * 
  * @package     Comodojo Spare Parts
  * @author      Marco Giovinazzi <info@comodojo.org>
- * @license     GPL-3.0+
+ * @license     MIT
  *
  * LICENSE:
  * 
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Affero General Public License for more details.
- *
- * You should have received a copy of the GNU Affero General Public License
- * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
  */
 
 class CookieManager {
 
-	private $cookies = array();
+    /*
+     * Cookie storage :)
+     *
+     * @var array
+     */
+    private $cookies = array();
 
-	public function register(CookieInterface $cookie) {
+    /**
+     * Register cookie in manager
+     *
+     * @param   \Comodojo\Cookies\CookieInterface\CookieInterface     $cookie
+     *
+     * @return  Object   $this
+     */
+    public function register(CookieInterface $cookie) {
 
-		$this->cookies[$cookie->getName()] = $cookie;
+        $this->cookies[$cookie->getName()] = $cookie;
 
-		return $this;
+        return $this;
 
-	}
+    }
 
-	public function unregister(CookieInterface $cookie) {
+    /**
+     * Register cookie in manager
+     *
+     * @param   mixed    $cookie
+     *
+     * @return  Object   $this
+     */
+    public function unregister($cookie) {
 
-		if ( $this->exists($cookie->getName()) ) {
+        if ( empty($cookie) ) throw new CookieException("Invalid cookie object or name");
 
-			unset($this->cookies[$cookie->getName()]);
+        $name = ($cookie instanceof CookieInterface) ? $cookie->getName() : $cookie;
 
-			return true;
+        if ( $this->isRegistered($name) ) unset($this->cookies[$name]);
 
-		}
+        else throw new CookieException("Cookie is not registered");
 
-		else return false;
+        return $this;
 
-	}
+    }
 
-	public function exists($cookieName) {
+    /**
+     * Check if cookie has been registered in manager
+     *
+     * @param   mixed    $cookie
+     *
+     * @return  Object   $this
+     */
+    public function isRegistered($cookie) {
 
-		return array_key_exists($cookie->getName(), $this->cookies);
+        if ( empty($cookie) ) throw new CookieException("Invalid cookie object or name");
 
-	}
+        $name = ($cookie instanceof CookieInterface) ? $cookie->getName() : $cookie;
 
-	public function get($cookieName) {
+        return array_key_exists($cookie_name, $this->cookies)
 
-		if ( $this->exists($cookieName) ) return $this->cookies[$cookieName];
+    }
 
-		else throw new CookieException("Cookie ".$cookieName." is not registered");
+    /**
+     * Get cookie from $cookie_name
+     *
+     * @param   string   $cookie_name
+     *
+     * @return  \Comodojo\Cookies\CookieInterface\CookieInterface
+     */
+    public function get($cookie_name) {
 
-	}
+        if ( $this->isRegistered($cookie_name) ) return $this->cookies[$cookie_name];
 
-	public function set($cookies=null) {
+        else throw new CookieException("Cookie is not registered");
 
-		foreach ($this->cookies as $name => $cookie) {
-			
-			try {
-				
-				$cookie->set()
-				
-			} catch (CookieException $ce) {
-				
-				throw $ce;
+    }
 
-			}
+    /**
+     * Get values from all registered cookies and dump as an associative array
+     *
+     * @return  array
+     */
+    public function getValues() {
 
-		}
+        $cookies = array();
 
-	}
+        try {
+            
+            foreach ($this->cookies as $name=>$cookie) {
+                
+                $cookies[$name] = $cookies->getValue();
+
+            }
+
+        } catch (CookieException $ce) {
+            
+            throw $ce;
+
+        }
+
+        return $cookies;
+
+    }
+
+    /**
+     * Save all registered cookies
+     *
+     * @return  Object   $this
+     */
+    public function save() {
+
+        try {
+
+            foreach ($this->cookies as $c) {
+                
+                $c->save();
+
+            }
+            
+        } catch (CookieException $ce) {
+            
+            throw $ce;
+
+        }
+
+        return $this;
+
+    }
+
+    /**
+     * Load all registered cookies
+     *
+     * @return  Object   $this
+     */
+    public function load() {
+
+        try {
+
+            foreach ($this->cookies as $c) {
+                
+                $c->load();
+
+            }
+            
+        } catch (CookieException $ce) {
+            
+            throw $ce;
+
+        }
+
+        return $this;
+
+    }
 
 }

@@ -5,51 +5,67 @@ use \Comodojo\Exception\CookieException;
 use \Comodojo\Cookies\CookieInterface\CookieInterface;
 
 /**
- * Plain cookie
+ * AES-encrypted cookie
  * 
  * @package     Comodojo Spare Parts
  * @author      Marco Giovinazzi <info@comodojo.org>
- * @license     GPL-3.0+
+ * @license     MIT
  *
  * LICENSE:
  * 
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Affero General Public License for more details.
- *
- * You should have received a copy of the GNU Affero General Public License
- * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
  */
 
 class SecureCookie extends Cookie implements CookieInterface {
 
-	private $key = null;
+    private $key = null;
 
-	public function __construct($name, $key) {
+    /**
+     * Secure cookie constructor
+     *
+     * Setup cookie name and key
+     *
+     * @param   string   $name
+     *
+     * @param   string   $key
+     *
+     * @throws \Comodojo\Exception\CookieException
+     */
+    public function __construct($name, $key) {
 
-		if ( empty($key) OR !is_scalar($key) ) throw new CookieException("Invalid secret key");
+        if ( empty($key) OR !is_scalar($key) ) throw new CookieException("Invalid secret key");
 
-		$this->key = $key;
+        $this->key = $key;
 
-		try {
-			
-			parent::__construct($name);
+        try {
+            
+            parent::__construct($name);
 
-		} catch (CookieException $ce) {
-			
-			throw $ce;
+        } catch (CookieException $ce) {
+            
+            throw $ce;
 
-		}
+        }
 
-	}
+    }
 
-	public function setValue($value, $serialize=true) {
+    /**
+     * Set cookie content
+     *
+     * @param   mixed   $cookieValue    Cookie content
+     * @param   bool    $serialize      If true (default) cookie will be serialized first
+     *
+     * @return  Object  $this
+     *
+     * @throws \Comodojo\Exception\CookieException
+     */
+    public function setValue($value, $serialize=true) {
 
         if ( $serialize === true ) $value = serialize($value);
 
@@ -65,9 +81,16 @@ class SecureCookie extends Cookie implements CookieInterface {
 
     }
 
-    public function getValue($unserialize = true) {
+    /**
+     * Get cookie content
+     *
+     * @param   bool    $unserializes    If true (default) cookie will be unserialized first
+     *
+     * @return  mixed
+     */
+    public function getValue($unserialize=true) {
 
-    	$cipher = new \Crypt_AES(CRYPT_AES_MODE_ECB);
+        $cipher = new \Crypt_AES(CRYPT_AES_MODE_ECB);
 
         $cipher->setKeyLength(256);
 
@@ -81,15 +104,26 @@ class SecureCookie extends Cookie implements CookieInterface {
 
     }
 
-    static public function setCookie($name, $properties=array(), $key) {
+    /**
+     * Static method to create a cookie quickly
+     *
+     * @param   string   $name  The cookie name
+     *
+     * @param   string   $key
+     * 
+     * @param   array    $properties    Array of properties cookie should have
+     *
+     * @return  Object \Comodojo\Cookies\Cookie
+     *
+     * @throws  \Comodojo\Exception\CookieException
+     */
+    static public function create($name, $key, $properties=array()) {
 
-    	try {
+        try {
 
             $cookie = new SecureCookie($name, $key);
 
             self::cookieProperties($cookie, $properties);
-            
-            $value = $cookie->set();
 
         } catch (CookieException $ce) {
             
@@ -97,17 +131,28 @@ class SecureCookie extends Cookie implements CookieInterface {
 
         }
 
-        return $value;
+        return $cookie;
 
     }
 
-    static public function getCookie($name, $key) {
+    /**
+     * Static method to get a cookie quickly
+     *
+     * @param   string   $name  The cookie name
+     *
+     * @param   string   $key
+     *
+     * @return  Object \Comodojo\Cookies\Cookie
+     *
+     * @throws  \Comodojo\Exception\CookieException
+     */
+    static public function retrieve($name, $key) {
 
-    	try {
+        try {
 
-            $cookie = new SecureCookie($name, $key);
-            
-            $value = $cookie->get();
+            $cookie = new Cookie($name, $key);
+
+            $return = $cookie->load();
 
         } catch (CookieException $ce) {
             
@@ -115,11 +160,20 @@ class SecureCookie extends Cookie implements CookieInterface {
 
         }
 
-        return $value;
+        return $return;
 
     }
 
-	static private function clientSpecificKey($key) {
+    /**
+     * Create a client-specific key using provided key,
+     * the client remote address and (in case) the value of
+     * HTTP_X_FORWARDED_FOR header
+     *
+     * @param   string   $key
+     *
+     * @return  string
+     */
+    static private function clientSpecificKey($key) {
 
         $client_hash = md5($_SERVER['REMOTE_ADDR'] . ( isset($_SERVER['HTTP_X_FORWARDED_FOR']) ? $_SERVER['HTTP_X_FORWARDED_FOR'] : '' ), true);
 

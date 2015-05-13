@@ -8,22 +8,17 @@ use \Comodojo\Exception\CookieException;
  * 
  * @package     Comodojo Spare Parts
  * @author      Marco Giovinazzi <info@comodojo.org>
- * @license     GPL-3.0+
+ * @license     MIT
  *
  * LICENSE:
  * 
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Affero General Public License for more details.
- *
- * You should have received a copy of the GNU Affero General Public License
- * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
  */
 
 class Cookie implements CookieInterface {
@@ -182,17 +177,6 @@ class Cookie implements CookieInterface {
     }
 
     /**
-     * Get the time the cookie will expire
-     *
-     * @return  integer
-     */
-    public function getExpire() {
-
-        return $this->expire;
-
-    }
-
-    /**
      * Set cookie's path
      *
      * @param   string  $location
@@ -203,22 +187,11 @@ class Cookie implements CookieInterface {
      */
     public function setPath($location) {
 
-        if ( !is_string($location) ) throw new CookieException("Invalid path attribute for a cookie");
+        if ( !is_string($location) ) throw new CookieException("Invalid path attribute");
         
         $this->path = $path;
 
         return $this;
-
-    }
-
-    /**
-     * Get cookie's path
-     *
-     * @return  string
-     */
-    public function getPath() {
-
-        return $this->path;
 
     }
 
@@ -242,22 +215,13 @@ class Cookie implements CookieInterface {
     }
 
     /**
-     * Get cookie's domain
-     *
-     * @return  string
-     */
-    public function getDomain() {
-
-        return $this->domain;
-
-    }
-
-    /**
      * Set if the cookie should be transmitted only via https
      *
-     * @param   bool  $mode
+     * @param   bool     $mode
+     *
+     * @return  Object   $this
      */
-    public function setSecure($mode) {
+    public function setSecure($mode=false) {
 
         $this->secure = filter_var($mode, FILTER_VALIDATE_BOOLEAN);
 
@@ -266,22 +230,13 @@ class Cookie implements CookieInterface {
     }
 
     /**
-     * Get the cookie's secure mode
-     *
-     * @return bool
-     */
-    public function getSecure() {
-
-        return $this->secure;
-
-    }
-
-    /**
      * Set if cookie should be available only to HTTP protocol
      *
-     * @return
+     * @param   bool     $mode
+     *
+     * @return  Object   $this
      */
-    public function setHttponly($mode) {
+    public function setHttponly($mode=false) {
 
         $this->httponly = filter_var($mode, FILTER_VALIDATE_BOOLEAN);
 
@@ -290,24 +245,13 @@ class Cookie implements CookieInterface {
     }
 
     /**
-     * Get cookie's httponly mode
-     *
-     * @return  bool
-     */
-    public function getHttponly() {
-
-        return $this->httponly;
-
-    }
-
-    /**
-     * Set cookie
+     * Save cookie
      *
      * @return bool
      *
      * @throws \Comodojo\Exception\CookieException
      */
-    public function set() {
+    public function save() {
 
         if ( setcookie(
             $this->name,
@@ -324,17 +268,15 @@ class Cookie implements CookieInterface {
     }
 
     /**
-     * Get cookie content from request
-     *
-     * Other parameters (like expire time) will be erased if cookie exists
+     * Load cookie content from request
      *
      * @return Object $this
      *
      * @throws \Comodojo\Exception\CookieException
      */
-    public function get() {
+    public function load() {
 
-        if ( !isset($_COOKIE[$this->name]) ) throw new CookieException("Cookie cannot be found");
+        if ( !$this->exists($this->name) ) throw new CookieException("Cookie ".$this->getName()." does not exists");
 
         $this->setValue( $_COOKIE[$this->name] );
 
@@ -342,7 +284,16 @@ class Cookie implements CookieInterface {
 
     }
 
+    /**
+     * Delete a cookie
+     *
+     * @return bool
+     *
+     * @throws \Comodojo\Exception\CookieException
+     */
     public function delete() {
+
+        if ( !$this->exists($this->name) ) return true;
 
         if ( setcookie(
             $this->name,
@@ -365,19 +316,28 @@ class Cookie implements CookieInterface {
      */
     public function exists() {
 
-        reutrn isset( $_COOKIE[$this->name] );
+        return isset( $_COOKIE[$this->name] );
 
     }
 
-    static public function setCookie($name, $properties=array()) {
+    /**
+     * Static method to create a cookie quickly
+     *
+     * @param   string   $name  The cookie name
+     * 
+     * @param   array    $properties    Array of properties cookie should have
+     *
+     * @return  Object \Comodojo\Cookies\Cookie
+     *
+     * @throws  \Comodojo\Exception\CookieException
+     */
+    static public function create($name, $properties=array()) {
 
         try {
 
             $cookie = new Cookie($name);
 
             self::cookieProperties($cookie, $properties);
-            
-            $value = $cookie->set();
 
         } catch (CookieException $ce) {
             
@@ -385,17 +345,26 @@ class Cookie implements CookieInterface {
 
         }
 
-        return $value;
+        return $cookie;
 
     }
 
-    static public function getCookie($name) {
+    /**
+     * Static method to get a cookie quickly
+     *
+     * @param   string   $name  The cookie name
+     *
+     * @return  Object \Comodojo\Cookies\Cookie
+     *
+     * @throws  \Comodojo\Exception\CookieException
+     */
+    static public function retrieve($name) {
 
         try {
 
             $cookie = new Cookie($name);
-            
-            $value = $cookie->get();
+
+            $return = $cookie->load();
 
         } catch (CookieException $ce) {
             
@@ -403,17 +372,26 @@ class Cookie implements CookieInterface {
 
         }
 
-        return $value;
+        return $return;
 
     }
 
-    static public function deleteCookie($name) {
+    /**
+     * Static method to delete a cookie quickly
+     *
+     * @param   string   $name  The cookie name
+     *
+     * @return  Object \Comodojo\Cookies\Cookie
+     *
+     * @throws  \Comodojo\Exception\CookieException
+     */
+    static public function erase($name) {
 
         try {
 
             $cookie = new Cookie($name);
-            
-            $value = $cookie->delete();
+
+            $return = $cookie->delete();
 
         } catch (CookieException $ce) {
             
@@ -421,11 +399,20 @@ class Cookie implements CookieInterface {
 
         }
 
-        return $value;
+        return $return;
 
     }
 
-    static protected function cookieProperties(\Comodojo\Cookies\CookieInterface\CookieInterface $cookie, $properties) {
+    /**
+     * Set content of $cookie from array $properties
+     *
+     * @param   string   $name  The cookie name
+     *
+     * @param   array    $properties    Array of properties cookie should have
+     *
+     * @return  Object \Comodojo\Cookies\Cookie
+     */
+    static protected function cookieProperties(CookieInterface $cookie, $properties) {
 
         foreach ($properties as $property => $value) {
                 
