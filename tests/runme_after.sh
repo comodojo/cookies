@@ -1,1 +1,1 @@
-kill "${pid}"
+kill "${PYPID}"
