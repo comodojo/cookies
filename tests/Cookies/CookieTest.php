@@ -6,7 +6,7 @@ class SecureCookieTest extends \PHPUnit_Framework_TestCase {
 
         $ch = curl_init();
 
-        curl_setopt($ch, CURLOPT_URL, 'http://localhost/SetSecureCookie.php');
+        curl_setopt($ch, CURLOPT_URL, 'http://localhost/tests/resources/SetSecureCookie.php');
 
         curl_setopt($ch, CURLOPT_PORT, 8000);
 
@@ -32,7 +32,7 @@ class SecureCookieTest extends \PHPUnit_Framework_TestCase {
 
         $ch = curl_init();
 
-        curl_setopt($ch, CURLOPT_URL, 'http://localhost/GetSecureCookie.php');
+        curl_setopt($ch, CURLOPT_URL, 'http://localhost/tests/resources/GetSecureCookie.php');
 
         curl_setopt($ch, CURLOPT_PORT, 8000);
 
