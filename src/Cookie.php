@@ -28,44 +28,44 @@ class Cookie implements CookieInterface {
      *
      * @var string
      */
-    private $name = null;
+    protected $name = null;
 
     /*
      * Cookie value (native string or serialized one)
      *
      * @var string
      */
-    private $value = null;
+    protected $value = null;
 
     /*
      *
      * @var
      */
-    private $expire = null;
+    protected $expire = null;
 
     /*
      *
      * @var
      */
-    private $path = null;
+    protected $path = null;
 
     /*
      *
      * @var
      */
-    private $domain = null;
+    protected $domain = null;
 
     /*
      *
      * @var
      */
-    private $secure = false;
+    protected $secure = false;
 
     /*
      *
      * @var
      */
-    private $httponly = false;
+    protected $httponly = false;
 
     /**
      * Cookie constructor
@@ -132,13 +132,21 @@ class Cookie implements CookieInterface {
      */
     public function setValue($value, $serialize=true) {
 
-        if ( !is_scalar($value) AND $serialize !== true ) throw new CookieException("Cannot set non-scalar value without serialization");
+        if ( !is_scalar($value) AND $serialize === false ) throw new CookieException("Cannot set non-scalar value without serialization");
 
-        if ( $serialize === true ) $value = serialize($value);
+        if ( $serialize ) {
+
+            $cookie_value = serialize($value);
+
+        } else {
+
+            $cookie_value = $value;
+
+        }
 
         if ( strlen($value) > 4096 ) throw new CookieException("Cookie size larger than 4KB");
 
-        $this->value = $value;
+        $this->value = $cookie_value;
 
         return $this;
 
@@ -153,7 +161,7 @@ class Cookie implements CookieInterface {
      */
     public function getValue($unserialize=true) {
 
-        return ( $unserialize === true ) ? unserialize($this->value) : $this->value;
+        return $unserialize ? unserialize($this->value) : $this->value;
 
     }
 
@@ -206,7 +214,7 @@ class Cookie implements CookieInterface {
      */
     public function setDomain($domain) {
 
-        if ( !filter_var($domain, FILTER_VALIDATE_URL) ) throw new CookieException("Invalid domain attribute for a cookie");
+        if ( !is_scalar($domain) OR !self::checkDomain($domain) ) throw new CookieException("Invalid domain attribute");
 
         $this->domain = $domain;
 
@@ -276,9 +284,9 @@ class Cookie implements CookieInterface {
      */
     public function load() {
 
-        if ( !$this->exists($this->name) ) throw new CookieException("Cookie ".$this->getName()." does not exists");
+        if ( !$this->exists($this->name) ) throw new CookieException("Cookie does not exists");
 
-        $this->setValue( $_COOKIE[$this->name] );
+        $this->value = $_COOKIE[$this->name];
 
         return $this;
 
@@ -303,7 +311,7 @@ class Cookie implements CookieInterface {
             null,
             $this->secure,
             $this->httponly
-        ) === false ) throw new CookieException("Cannot delete cookie: ".$this->name);
+        ) === false ) throw new CookieException("Cannot delete cookie");
 
         return true;
 
@@ -331,17 +339,17 @@ class Cookie implements CookieInterface {
      *
      * @throws  \Comodojo\Exception\CookieException
      */
-    static public function create($name, $properties=array()) {
+    static public function create($name, $properties=array(), $serialize=true) {
 
         try {
 
             $cookie = new Cookie($name);
 
-            self::cookieProperties($cookie, $properties);
+            self::cookieProperties($cookie, $properties, $serialize);
 
         } catch (CookieException $ce) {
             
-            throw new $ce;
+            throw $ce;
 
         }
 
@@ -368,7 +376,7 @@ class Cookie implements CookieInterface {
 
         } catch (CookieException $ce) {
             
-            throw new $ce;
+            throw $ce;
 
         }
 
@@ -395,7 +403,7 @@ class Cookie implements CookieInterface {
 
         } catch (CookieException $ce) {
             
-            throw new $ce;
+            throw $ce;
 
         }
 
@@ -412,7 +420,7 @@ class Cookie implements CookieInterface {
      *
      * @return  Object \Comodojo\Cookies\Cookie
      */
-    static protected function cookieProperties(CookieInterface $cookie, $properties) {
+    static protected function cookieProperties(CookieInterface $cookie, $properties, $serialize) {
 
         foreach ($properties as $property => $value) {
                 
@@ -420,7 +428,7 @@ class Cookie implements CookieInterface {
 
                 case 'value':
                     
-                    $cookie->setValue($value);
+                    $cookie->setValue($value, $serialize);
 
                     break;
 
@@ -459,6 +467,25 @@ class Cookie implements CookieInterface {
         }
 
         return $cookie;
+
+    }
+
+    /**
+     * Check if domain is valid
+     *
+     * Main code from: http://stackoverflow.com/questions/1755144/how-to-validate-domain-name-in-php
+     *
+     * @param   string   $domain_name  The domain name to check
+     *
+     * @return  bool
+     */
+    static protected function checkDomain($domain_name) {
+    
+        if ( $domain_name[0] == '.' ) $domain_name = substr($domain_name, 1);
+
+        return ( preg_match("/^([a-z\d](-*[a-z\d])*)(\.([a-z\d](-*[a-z\d])*))*$/i", $domain_name) //valid chars check
+                && preg_match("/^.{1,253}$/", $domain_name) //overall length check
+                && preg_match("/^[^\.]{1,63}(\.[^\.]{1,63})*$/", $domain_name) ); //length of each label
 
     }
 

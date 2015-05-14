@@ -11,4 +11,4 @@ php:
 before_script:
   - composer install --prefer-source
 
-script: ./vendor/bin/phpunit
+script: bash tests/runme.sh

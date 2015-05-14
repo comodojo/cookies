@@ -117,17 +117,17 @@ class SecureCookie extends Cookie implements CookieInterface {
      *
      * @throws  \Comodojo\Exception\CookieException
      */
-    static public function create($name, $key, $properties=array()) {
+    static public function create($name, $key, $properties=array(), $serialize=true) {
 
         try {
 
             $cookie = new SecureCookie($name, $key);
 
-            self::cookieProperties($cookie, $properties);
+            self::cookieProperties($cookie, $properties, $serialize);
 
         } catch (CookieException $ce) {
             
-            throw new $ce;
+            throw $ce;
 
         }
 
@@ -150,13 +150,13 @@ class SecureCookie extends Cookie implements CookieInterface {
 
         try {
 
-            $cookie = new Cookie($name, $key);
+            $cookie = new SecureCookie($name, $key);
 
             $return = $cookie->load();
 
         } catch (CookieException $ce) {
             
-            throw new $ce;
+            throw $ce;
 
         }
 
