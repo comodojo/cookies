@@ -1,16 +1,16 @@
 <?php
 
-class CookieTest extends \PHPUnit_Framework_TestCase {
+class SecureCookieTest extends \PHPUnit_Framework_TestCase {
 
     public function testCookieSave() {
 
         $ch = curl_init();
 
-        curl_setopt($ch, CURLOPT_URL, 'http://localhost/tests/resources/SetCookie.php');
+        curl_setopt($ch, CURLOPT_URL, 'http://localhost/tests/resources/SetSecureCookie.php');
 
         curl_setopt($ch, CURLOPT_PORT, 8000);
 
-        curl_setopt($ch, CURLOPT_COOKIEJAR, __DIR__."/../tmp/COOKIE_TMP");
+        curl_setopt($ch, CURLOPT_COOKIEJAR, __DIR__."/../tmp/SECURE_COOKIE_TMP");
 
         curl_setopt($ch, CURLOPT_RETURNTRANSFER,  1);
 
@@ -32,11 +32,11 @@ class CookieTest extends \PHPUnit_Framework_TestCase {
 
         $ch = curl_init();
 
-        curl_setopt($ch, CURLOPT_URL, 'http://localhost/tests/resources/GetCookie.php');
+        curl_setopt($ch, CURLOPT_URL, 'http://localhost/tests/resources/GetSecureCookie.php');
 
         curl_setopt($ch, CURLOPT_PORT, 8000);
 
-        curl_setopt($ch, CURLOPT_COOKIEFILE, __DIR__."/../tmp/COOKIE_TMP");
+        curl_setopt($ch, CURLOPT_COOKIEFILE, __DIR__."/../tmp/SECURE_COOKIE_TMP");
 
         curl_setopt($ch, CURLOPT_RETURNTRANSFER,  1);
 
@@ -56,7 +56,7 @@ class CookieTest extends \PHPUnit_Framework_TestCase {
 
     public static function tearDownAfterClass() {
 
-        unlink(__DIR__."/../tmp/COOKIE_TMP");
+        unlink(__DIR__."/../tmp/SECURE_COOKIE_TMP");
 
     }
 

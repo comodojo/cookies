@@ -8,6 +8,12 @@ php:
   - 7
   - hhvm
 
+matrix:
+  allow_failures:
+    - php: hhvm
+
+sudo: required
+
 before_script:
   - if [[ "$TRAVIS_PHP_VERSION" == 5.3* ]]; then bash tests/runme_before_53.sh; fi
   - if [[ "$TRAVIS_PHP_VERSION" != 5.3* ]]; then bash tests/runme_before.sh; fi

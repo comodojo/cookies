@@ -41,6 +41,6 @@ try {
 
 }
 
-ob_end_flush();
+ob_end_clean();
 
 echo json_encode($cookies);

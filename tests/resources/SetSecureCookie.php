@@ -4,7 +4,7 @@ use Comodojo\Cookies\SecureCookie;
 
 require __DIR__.'/../../vendor/autoload.php';
 
-//ob_start();
+ob_start();
 
 // create cookie with class constructor
 
@@ -40,6 +40,6 @@ $time = time();
 
 $cookies['cookie_5'] = $cookie_5->setValue("cookie for www.example.com")->setDomain("www.example.com")->save();
 
-//ob_end_flush();
+ob_end_clean();
 
 echo json_encode($cookies);
