@@ -1,8 +1,8 @@
 <?php namespace Comodojo\Cookies;
 
-use \Comodojo\Cookies\Cookie;
-use \Comodojo\Exception\CookieException;
 use \Comodojo\Cookies\CookieInterface\CookieInterface;
+use \Comodojo\Exception\CookieException;
+use \Comodojo\Cookies\CookieBase;
 
 /**
  * AES-encrypted cookie
@@ -22,7 +22,7 @@ use \Comodojo\Cookies\CookieInterface\CookieInterface;
  * THE SOFTWARE.
  */
 
-class SecureCookie extends Cookie implements CookieInterface {
+class SecureCookie extends CookieBase implements CookieInterface {
 
     private $key = null;
 
@@ -45,7 +45,7 @@ class SecureCookie extends Cookie implements CookieInterface {
 
         try {
             
-            parent::__construct($name);
+            $this->setName($name);
 
         } catch (CookieException $ce) {
             
@@ -67,6 +67,8 @@ class SecureCookie extends Cookie implements CookieInterface {
      */
     public function setValue($value, $serialize=true) {
 
+        if ( !is_scalar($value) AND $serialize === false ) throw new CookieException("Cannot set non-scalar value without serialization");
+
         if ( $serialize === true ) $value = serialize($value);
 
         $cipher = new \Crypt_AES(CRYPT_AES_MODE_ECB);
@@ -75,9 +77,13 @@ class SecureCookie extends Cookie implements CookieInterface {
 
         $cipher->setKey( self::clientSpecificKey($this->key) );
 
-        $value = $cipher->encrypt($value);
+        $cookie_value = $cipher->encrypt($value);
 
-        return parent::setValue($value, false);
+        if ( strlen($cookie_value) > 4096 ) throw new CookieException("Cookie size larger than 4KB");
+
+        $this->value = $cookie_value;
+
+        return $this;
 
     }
 

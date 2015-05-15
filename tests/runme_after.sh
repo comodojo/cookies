@@ -1,1 +1,1 @@
-kill "${PYPID}"
+killall php
