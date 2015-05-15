@@ -79,7 +79,7 @@ class CookieManager {
 
         $name = ($cookie instanceof CookieInterface) ? $cookie->getName() : $cookie;
 
-        return array_key_exists($cookie_name, $this->cookies)
+        return array_key_exists($cookie_name, $this->cookies);
 
     }
 
@@ -111,7 +111,7 @@ class CookieManager {
             
             foreach ($this->cookies as $name=>$cookie) {
                 
-                $cookies[$name] = $cookies->getValue();
+                $cookies[$name] = $cookie->getValue();
 
             }
 
@@ -146,7 +146,7 @@ class CookieManager {
 
         }
 
-        return $this;
+        return true;
 
     }
 
