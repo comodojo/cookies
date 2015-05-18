@@ -45,6 +45,16 @@ class Cookie extends CookieBase implements CookieInterface {
 
         }
 
+        if ( defined("COMODOJO_COOKIE_MAX_SIZE") ) {
+
+            $this->max_cookie_size = filter_var(COMODOJO_COOKIE_MAX_SIZE, FILTER_VALIDATE_INT, array(
+                'options' => array(
+                    'default' => 4000
+                )
+            ));
+
+        }
+
     }
 
     /**
@@ -63,7 +73,7 @@ class Cookie extends CookieBase implements CookieInterface {
 
         $cookie_value = $serialize === true ? serialize($value) : $value;
 
-        if ( strlen($value) > 4096 ) throw new CookieException("Cookie size larger than 4KB");
+        if ( strlen($value) > $this->max_cookie_size ) throw new CookieException("Cookie size larger than 4KB");
 
         $this->value = $cookie_value;
 

@@ -1,88 +1,16 @@
-comodojo/cookies
-================
+## comodojo/cookies
 
-A simple lib to manage (secure) cookies
+[![Build Status](https://api.travis-ci.org/comodojo/cookies.png)](http://travis-ci.org/comodojo/cookies) [![Latest Stable Version](https://poser.pugx.org/comodojo/cookies/v/stable)](https://packagist.org/packages/comodojo/cookies) [![Total Downloads](https://poser.pugx.org/comodojo/cookies/downloads)](https://packagist.org/packages/comodojo/cookies) [![Latest Unstable Version](https://poser.pugx.org/comodojo/cookies/v/unstable)](https://packagist.org/packages/comodojo/cookies) [![License](https://poser.pugx.org/comodojo/cookies/license)](https://packagist.org/packages/comodojo/cookies)
+
+A minimalist and extensible library to manage cookies
 
 ## Introduction
 
-This small library provides simple, static methods to manage plain or encrypted cookies.
+## Setting a Cookie
 
-It's content agnostic: values are serialized before becoming a cookie, so set method accepts arrays, strings, objects, ...
+## Setting a SecureCookie
 
-In case of encrypted cookies, a minimum protection from cookie spoofing is made by composing the crypto key using both a user defined secret and IP informations from S_SERVER superglobal.
-
-## Usage
-
-### Setup cookies
-
-```php
-
-// Plain cookie: no encryption and predefined name (comodojo_cookie)
-$plain_cookie = Cookies::set("Lorem ipsum dolor sit amet...");
-
-// Plain cookie with extra parameters
-$plain_extra = Cookies::set( array(
-	"name"  => "comodojo_plain_extra_cookie",
-	"value" => "Lorem ipsum dolor sit amet",
-	"expire"=> time() + 3600
-));
-
-// Encrypted cookie with predefined name (comodojo_cookie)
-$encrypted_cookie = Cookies::set("Lorem ipsum dolor sit amet...", "thisismyverycomplexpassword");
-
-// Encrypted cookie with extra parameters
-$encrypted_extra = Cookies::set( array(
-	"name"  => "comodojo_encrypted_extra_cookie",
-	"value" => "Lorem ipsum dolor sit amet",
-	"expire"=> time() + 3600
-), "thisismyverycomplexpassword");
-
-// Storing an array
-$plain_cookie = Cookies::set( array(
-	"name"  => "comodojo_array_in_cookie",
-	"value" => array(
-		"sed", 
-		"aliqua", 
-		"mentor", 
-		"partum", 
-		"differo"
-	)
-));
-
-```
-
-### Retrieving cookies
-
-```php
-
-// Plain cookie with predefined name (comodojo_cookie)
-$plain_cookie = Cookies::get();
-
-// Plain cookie with custom name
-$plain_cookie_custom_name = Cookies::get("my_cookie");
-
-// Encrypted cookie
-$encrypted_cookie = Cookies::get("comodojo_encrypted", "thisismyverycomplexpassword");
-
-```
-
-### Deleting cookies
-
-```php
-
-// Cookie with predefined name (comodojo_cookie)
-Cookies::delete();
-
-// Cookie with custom name
-Cookies::delete("comodojo_encrypted");
-
-// Cookie with custom parameters
-Cookies::delete( array(
-	"name"	=> "comodojo_encrypted",
-	"domain"=> "example.org"
-));
-
-```
+## Using CookieManager
 
 ## Notes
 

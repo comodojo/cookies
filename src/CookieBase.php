@@ -66,6 +66,15 @@ class CookieBase {
      */
     protected $httponly = false;
 
+    /*
+     * Max cookie size
+     *
+     * Should be 4096 max
+     *
+     * @var int
+     */
+    protected $max_cookie_size = 4000;
+
     /**
      * Set cookie name
      *

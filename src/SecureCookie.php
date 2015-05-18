@@ -24,6 +24,11 @@ use \Comodojo\Cookies\CookieBase;
 
 class SecureCookie extends CookieBase implements CookieInterface {
 
+    /*
+     * AES key
+     *
+     * @var int
+     */
     private $key = null;
 
     /**
@@ -53,6 +58,16 @@ class SecureCookie extends CookieBase implements CookieInterface {
 
         }
 
+        if ( defined("COMODOJO_COOKIE_MAX_SIZE") ) {
+
+            $this->max_cookie_size = filter_var(COMODOJO_COOKIE_MAX_SIZE, FILTER_VALIDATE_INT, array(
+                'options' => array(
+                    'default' => 4000
+                )
+            ));
+
+        }
+
     }
 
     /**
@@ -79,7 +94,7 @@ class SecureCookie extends CookieBase implements CookieInterface {
 
         $cookie_value = $cipher->encrypt($value);
 
-        if ( strlen($cookie_value) > 4096 ) throw new CookieException("Cookie size larger than 4KB");
+        if ( strlen($cookie_value) > $this->max_cookie_size ) throw new CookieException("Cookie size larger than 4KB");
 
         $this->value = $cookie_value;
 
