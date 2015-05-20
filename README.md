@@ -63,7 +63,7 @@ The class `` \Comodojo\Cookies\SecureCookie `` provides an extension of plain co
 
 - Cookie content is encrypted using a 256bit AES key
 - Key should be provided to class contructor
-- To ensure a minimum protection from cookie spoofing, the crypto key is calculated using both user defined secret and IP informations from S_SERVER superglobal
+- To ensure a minimum protection from cookie spoofing, the crypto key is calculated using both user defined secret and IP informations from S_SERVER superglobal (if available)
 
 To setup a SecureCookie:
 
@@ -153,3 +153,5 @@ $result = $manager->load()->getValues();
 - For compatibility reasons, the max cookie lenght is limited to 4000 chars; this parameter could be modified defining the constant `` COMODOJO_COOKIE_MAX_SIZE ``.
 
 - The maximum size of cookie can be <4KB due to serialization and (in case) encryption. In case of cookie > 4KB, a `` \Comodojo\Exception\CookieException `` is raised.
+
+- Pre-release code (unsupported) is still available [here](https://github.com/comodojo/cookies/releases/tag/0.1.0).

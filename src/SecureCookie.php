@@ -196,11 +196,21 @@ class SecureCookie extends CookieBase implements CookieInterface {
      */
     static private function clientSpecificKey($key) {
 
-        $client_hash = md5($_SERVER['REMOTE_ADDR'] . ( isset($_SERVER['HTTP_X_FORWARDED_FOR']) ? $_SERVER['HTTP_X_FORWARDED_FOR'] : '' ), true);
+        if ( isset($_SERVER['REMOTE_ADDR']) ) {
 
-        $server_hash = md5($key, true);
+            $client_hash = md5($_SERVER['REMOTE_ADDR'] . ( isset($_SERVER['HTTP_X_FORWARDED_FOR']) ? $_SERVER['HTTP_X_FORWARDED_FOR'] : '' ), true);
 
-        return $client_hash . $server_hash;
+            $server_hash = md5($key, true);
+
+            $cookie_key = $client_hash . $server_hash;
+
+        } else {
+
+            $cookie_key = hash('sha256', $key);
+
+        }
+
+        return $cookie_key;
 
     }
 
