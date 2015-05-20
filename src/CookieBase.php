@@ -169,7 +169,7 @@ class CookieBase {
      *
      * @return  Object   $this
      */
-    public function setSecure($mode=false) {
+    public function setSecure($mode=true) {
 
         $this->secure = filter_var($mode, FILTER_VALIDATE_BOOLEAN);
 
@@ -184,7 +184,7 @@ class CookieBase {
      *
      * @return  Object   $this
      */
-    public function setHttponly($mode=false) {
+    public function setHttponly($mode=true) {
 
         $this->httponly = filter_var($mode, FILTER_VALIDATE_BOOLEAN);
 

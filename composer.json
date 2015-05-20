@@ -1,6 +1,6 @@
 {
     "name": "comodojo/cookies",
-    "description": "A simple lib to manage (secure) cookies",
+    "description": "Minimalist and extensible library to manage cookies",
     "license": "MIT",
     "type": "library",
     "keywords": [

@@ -54,6 +54,29 @@ class CookieTest extends \PHPUnit_Framework_TestCase {
 
     }
 
+    /**
+     * @expectedException        Comodojo\Exception\CookieException
+     */
+    public function testCookieMaxLength() {
+
+        $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+
+        $charactersLength = strlen($characters);
+
+        $randomString = '';
+
+        for ($i = 0; $i < 5000; $i++) {
+    
+            $randomString .= $characters[rand(0, $charactersLength - 1)];
+    
+        }
+
+        $cookie = new \Comodojo\Cookies\Cookie('cookie_maxl');
+
+        $cookie->setValue($randomString);
+
+    }
+
     public static function tearDownAfterClass() {
 
         unlink(__DIR__."/../tmp/COOKIE_TMP");
