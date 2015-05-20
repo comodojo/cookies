@@ -8,7 +8,7 @@ Minimalist and extensible library to manage cookies
 
 This library provides methods to manage different kind of cookies as well a manager class to set/get multiple cookies.
 
-It could be easly extended defining a custom cookie class that implements the `` \Comodojo\Cookies\CookieInterface\CookieInterface `` interface.
+It could be easily extended defining a custom cookie class that implements the `` \Comodojo\Cookies\CookieInterface\CookieInterface `` interface.
 
 ## Installation
 
@@ -27,7 +27,7 @@ $cookie = new \Comodojo\Cookies\Cookie('my_cookie');
 
 // Set cookie's properties (optional) then save it
 $result = $cookie->setValue( "Lorem ipsum dolor" )
-                 ->setExpire(  )
+                 ->setExpire( time()+3600 )
                  ->setPath( "/myapp" )
                  ->setDomain( "example.com" )
                  ->setSecure()
@@ -59,7 +59,7 @@ $result = $cookie->save();
 
 ## Secure cookies
 
-The class `` \Comodojo\Cookies\SecureCookie `` provides an extension of plain cookies in which:
+The class `` \Comodojo\Cookies\SecureCookie `` provides an extension of plain cookie in which:
 
 - Cookie content is encrypted using a 256bit AES key
 - Key should be provided to class contructor
@@ -74,7 +74,7 @@ $cookie = new \Comodojo\Cookies\SecureCookie('my_secure_cookie', 'myverycomplexs
 
 // Set cookie's properties (optional) then save it
 $result = $cookie->setValue( "Lorem ipsum dolor" )
-                 ->setExpire(  )
+                 ->setExpire( time()+3600 )
                  ->setPath( "/myapp" )
                  ->setDomain( "example.com" )
                  ->setSecure()
@@ -146,8 +146,10 @@ $result = $manager->load()->getValues();
 
 ## Notes
 
+- By default, cookie content is serialized; this behaviour can be changed using last (optional) parameter of `` setValue() ``, `` getValue() `` and `` create() `` methods.
+
 - This library DOES NOT implement the [RFC 6896 KoanLogic's Secure Cookie Sessions for HTTP](https://tools.ietf.org/html/rfc6896).
 
-- The maximum size of cookie is <4KB due to serialization and (in case) encryption. In case of cookie > 4KB, a `` \Comodojo\Exception\CookieException `` is raised.
-
 - For compatibility reasons, the max cookie lenght is limited to 4000 chars; this parameter could be modified defining the constant `` COMODOJO_COOKIE_MAX_SIZE ``.
+
+- The maximum size of cookie can be <4KB due to serialization and (in case) encryption. In case of cookie > 4KB, a `` \Comodojo\Exception\CookieException `` is raised.
