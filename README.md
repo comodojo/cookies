@@ -42,7 +42,6 @@ Alternatively, use the static method `` Cookie::create() `` (parameters are opti
 
 // define a new cookie
 $cookie = Cookie::create('my_cookie', array(
-    'value'   => 'cookie-2'
     'value'   => "Lorem ipsum dolor"
     'expire'  => time()+3600
     'path'    => "/myapp"
@@ -89,7 +88,6 @@ Alternatively, use the static method `` SecureCookie::create() `` (parameters ar
 
 // define a new cookie
 $cookie = SecureCookie::create('my_secure_cookie', 'myverycomplexsecretkey', array(
-    'value'   => 'cookie-2'
     'value'   => "Lorem ipsum dolor"
     'expire'  => time()+3600
     'path'    => "/myapp"
