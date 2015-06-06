@@ -153,3 +153,11 @@ $result = $manager->load()->getValues();
 - For compatibility reasons, the max cookie lenght is limited to 4000 chars; this parameter could be modified defining the constant `` COMODOJO_COOKIE_MAX_SIZE ``.
 
 - The maximum size of cookie can be <4KB due to serialization and (in case) encryption. In case of cookie > 4KB, a `` \Comodojo\Exception\CookieException `` is raised.
+
+## Contributing
+
+Contributions are welcome and will be fully credited. Please see [CONTRIBUTING](CONTRIBUTING.md) for details.
+
+## License
+
+`` comodojo/cookies `` is released under the MIT License (MIT). Please see [License File](LICENSE) for more information.
