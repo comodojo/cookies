@@ -153,3 +153,11 @@ $result = $manager->load()->getValues();
 - The maximum size of cookie can be <4KB due to serialization and (in case) encryption. In case of cookie > 4KB, a `` \Comodojo\Exception\CookieException `` is raised.
 
 - Pre-release code (unsupported) is still available [here](https://github.com/comodojo/cookies/releases/tag/0.1.0).
+
+## Contributing
+
+Contributions are welcome and will be fully credited. Please see [CONTRIBUTING](CONTRIBUTING.md) for details.
+
+## License
+
+`` comodojo/cookies `` is released under the MIT License (MIT). Please see [License File](LICENSE) for more information.
