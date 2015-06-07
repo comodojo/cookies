@@ -154,6 +154,10 @@ $result = $manager->load()->getValues();
 
 - Pre-release code (unsupported) is still available [here](https://github.com/comodojo/cookies/releases/tag/0.1.0).
 
+## Documentation
+
+- [API](https://api.comodojo.org/libs/Comodojo/Cookies.html)
+
 ## Contributing
 
 Contributions are welcome and will be fully credited. Please see [CONTRIBUTING](CONTRIBUTING.md) for details.
