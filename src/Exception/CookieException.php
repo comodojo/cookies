@@ -1,11 +1,11 @@
 <?php namespace Comodojo\Exception;
 
 /**
- * CookiesException handler; nothing special, just an implementation of
+ * CookieException; nothing special, just an extension of
  * standard Exception class.
  *
  * @package     Comodojo Spare Parts
- * @author      Marco Giovinazzi <info@comodojo.org>
+ * @author      Marco Giovinazzi <marco.giovinazzi@comodojo.org>
  * @license     MIT
  *
  * LICENSE:
