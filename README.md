@@ -56,13 +56,56 @@ $result = $cookie->save();
 
 ```
 
-## Secure cookies
+## Encrypted cookies
 
-The class `` \Comodojo\Cookies\SecureCookie `` provides an extension of plain cookie in which:
+The class `` \Comodojo\Cookies\EncryptedCookie `` provides an extension of plain cookie in which:
 
 - Cookie content is encrypted using a 256bit AES key
 - Key should be provided to class contructor
-- To ensure a minimum protection from cookie spoofing, the crypto key is calculated using both user defined secret and IP informations from S_SERVER superglobal (if available)
+
+To setup a EncryptedCookie:
+
+```php
+
+// create an instance of \Comodojo\Cookies\EncryptedCookie
+$cookie = new \Comodojo\Cookies\EncryptedCookie('my_secure_cookie', 'myverycomplexsecretkey');
+
+// Set cookie's properties (optional) then save it
+$result = $cookie->setValue( "Lorem ipsum dolor" )
+                 ->setExpire( time()+3600 )
+                 ->setPath( "/myapp" )
+                 ->setDomain( "example.com" )
+                 ->setSecure()
+                 ->setHttponly()
+                 ->save();
+
+```
+
+Alternatively, use the static method `` EncryptedCookie::create() `` (parameters are optional):
+
+```php
+
+// define a new cookie
+$cookie = EncryptedCookie::create('my_secure_cookie', 'myverycomplexsecretkey', array(
+    'value'   => "Lorem ipsum dolor"
+    'expire'  => time()+3600
+    'path'    => "/myapp"
+    'domain'  => "example.com"
+    'secure'  => true
+    'httponly'=> true
+    )
+);
+
+// save it
+$result = $cookie->save();
+
+```
+
+## Secure cookies
+
+The class `` \Comodojo\Cookies\SecureCookie `` provides an extension of Encrypted Cookie. To ensure a minimum protection from cookie spoofing, the crypto key is calculated using both user defined secret and **IP informations** from S_SERVER superglobal (if available).
+
+This can be useful in internal networks or where clients does not often change IP address.
 
 To setup a SecureCookie:
 
