@@ -80,7 +80,7 @@ class EncryptedCookie extends CookieBase implements CookieInterface {
      *
      * @throws  \Comodojo\Exception\CookieException
      */
-    public function setValue($value, $serialize=true) {
+    public function setValue($value, $serialize = true) {
 
         if ( !is_scalar($value) AND $serialize === false ) throw new CookieException("Cannot set non-scalar value without serialization");
 
@@ -90,7 +90,7 @@ class EncryptedCookie extends CookieBase implements CookieInterface {
 
         $cipher->setKeyLength(256);
 
-        $cipher->setKey( self::EncryptedKey($this->key) );
+        $cipher->setKey(self::EncryptedKey($this->key));
 
         // added base64 encoding to avoid problems with binary data
 
@@ -113,13 +113,13 @@ class EncryptedCookie extends CookieBase implements CookieInterface {
      *
      * @return  mixed
      */
-    public function getValue($unserialize=true) {
+    public function getValue($unserialize = true) {
 
         $cipher = new \Crypt_AES(CRYPT_AES_MODE_ECB);
 
         $cipher->setKeyLength(256);
 
-        $cipher->setKey( self::EncryptedKey($this->key) );
+        $cipher->setKey(self::EncryptedKey($this->key));
 
         // added base64 encoding to avoid problems with binary data
 
@@ -131,7 +131,7 @@ class EncryptedCookie extends CookieBase implements CookieInterface {
 
         if ( $cookie === false ) throw new CookieException("Cookie data cannot be dectypted");
 
-        return ( $unserialize === true ) ? unserialize($cookie) : $cookie;
+        return ($unserialize === true) ? unserialize($cookie) : $cookie;
 
     }
 
@@ -148,7 +148,7 @@ class EncryptedCookie extends CookieBase implements CookieInterface {
      *
      * @throws  \Comodojo\Exception\CookieException
      */
-    public static function create($name, $key, $properties=array(), $serialize=true) {
+    public static function create($name, $key, $properties = array(), $serialize = true) {
 
         try {
 

@@ -67,7 +67,7 @@ class Cookie extends CookieBase implements CookieInterface {
      *
      * @throws  \Comodojo\Exception\CookieException
      */
-    public function setValue($value, $serialize=true) {
+    public function setValue($value, $serialize = true) {
 
         if ( !is_scalar($value) AND $serialize === false ) throw new CookieException("Cannot set non-scalar value without serialization");
 
@@ -88,7 +88,7 @@ class Cookie extends CookieBase implements CookieInterface {
      *
      * @return  mixed
      */
-    public function getValue($unserialize=true) {
+    public function getValue($unserialize = true) {
 
         return $unserialize ? unserialize($this->value) : $this->value;
 
@@ -105,7 +105,7 @@ class Cookie extends CookieBase implements CookieInterface {
      *
      * @throws  \Comodojo\Exception\CookieException
      */
-    public static function create($name, $properties=array(), $serialize=true) {
+    public static function create($name, $properties = array(), $serialize = true) {
 
         try {
 

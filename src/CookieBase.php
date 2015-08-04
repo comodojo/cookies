@@ -169,7 +169,7 @@ class CookieBase {
      *
      * @return  \Comodojo\Cookies\CookieBase
      */
-    public function setSecure($mode=true) {
+    public function setSecure($mode = true) {
 
         $this->secure = filter_var($mode, FILTER_VALIDATE_BOOLEAN);
 
@@ -184,7 +184,7 @@ class CookieBase {
      *
      * @return  \Comodojo\Cookies\CookieBase
      */
-    public function setHttponly($mode=true) {
+    public function setHttponly($mode = true) {
 
         $this->httponly = filter_var($mode, FILTER_VALIDATE_BOOLEAN);
 
@@ -264,7 +264,7 @@ class CookieBase {
      */
     public function exists() {
 
-        return isset( $_COOKIE[$this->name] );
+        return isset($_COOKIE[$this->name]);
 
     }
 
@@ -308,9 +308,9 @@ class CookieBase {
      */
     protected static function cookieProperties(\Comodojo\Cookies\CookieInterface\CookieInterface $cookie, $properties, $serialize) {
 
-        foreach ($properties as $property => $value) {
+        foreach ( $properties as $property => $value ) {
                 
-            switch ($property) {
+            switch ( $property ) {
 
                 case 'value':
                     
@@ -369,9 +369,9 @@ class CookieBase {
     
         if ( $domain_name[0] == '.' ) $domain_name = substr($domain_name, 1);
 
-        return ( preg_match("/^([a-z\d](-*[a-z\d])*)(\.([a-z\d](-*[a-z\d])*))*$/i", $domain_name) //valid chars check
+        return (preg_match("/^([a-z\d](-*[a-z\d])*)(\.([a-z\d](-*[a-z\d])*))*$/i", $domain_name) //valid chars check
                 && preg_match("/^.{1,253}$/", $domain_name) //overall length check
-                && preg_match("/^[^\.]{1,63}(\.[^\.]{1,63})*$/", $domain_name) ); //length of each label
+                && preg_match("/^[^\.]{1,63}(\.[^\.]{1,63})*$/", $domain_name)); //length of each label
 
     }
 
