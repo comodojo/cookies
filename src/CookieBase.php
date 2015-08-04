@@ -78,7 +78,7 @@ class CookieBase {
     /**
      * Set cookie name
      *
-     * @param   string  $cookieName    The cookie name
+     * @param   string  $name    The cookie name
      *
      * @return  \Comodojo\Cookies\CookieBase
      *
@@ -277,7 +277,7 @@ class CookieBase {
      *
      * @throws  \Comodojo\Exception\CookieException
      */
-    static public function erase($name) {
+    public static function erase($name) {
 
         try {
 
@@ -298,13 +298,15 @@ class CookieBase {
     /**
      * Set content of $cookie from array $properties
      *
-     * @param   Object   $cookie
+     * @param   \Comodojo\Cookies\CookieInterface\CookieInterface   $cookie
      *
      * @param   array    $properties    Array of properties cookie should have
      *
+     * @param   boolean  $serialize
+     *
      * @return  \Comodojo\Cookies\CookieBase
      */
-    static protected function cookieProperties($cookie, $properties, $serialize) {
+    protected static function cookieProperties(\Comodojo\Cookies\CookieInterface\CookieInterface $cookie, $properties, $serialize) {
 
         foreach ($properties as $property => $value) {
                 
@@ -363,7 +365,7 @@ class CookieBase {
      *
      * @return  bool
      */
-    static protected function checkDomain($domain_name) {
+    protected static function checkDomain($domain_name) {
     
         if ( $domain_name[0] == '.' ) $domain_name = substr($domain_name, 1);
 

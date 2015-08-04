@@ -105,7 +105,7 @@ class Cookie extends CookieBase implements CookieInterface {
      *
      * @throws  \Comodojo\Exception\CookieException
      */
-    static public function create($name, $properties=array(), $serialize=true) {
+    public static function create($name, $properties=array(), $serialize=true) {
 
         try {
 
@@ -132,7 +132,7 @@ class Cookie extends CookieBase implements CookieInterface {
      *
      * @throws  \Comodojo\Exception\CookieException
      */
-    static public function retrieve($name) {
+    public static function retrieve($name) {
 
         try {
 

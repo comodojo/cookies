@@ -148,7 +148,7 @@ class SecureCookie extends CookieBase implements CookieInterface {
      *
      * @throws  \Comodojo\Exception\CookieException
      */
-    static public function create($name, $key, $properties=array(), $serialize=true) {
+    public static function create($name, $key, $properties=array(), $serialize=true) {
 
         try {
 
@@ -177,7 +177,7 @@ class SecureCookie extends CookieBase implements CookieInterface {
      *
      * @throws  \Comodojo\Exception\CookieException
      */
-    static public function retrieve($name, $key) {
+    public static function retrieve($name, $key) {
 
         try {
 
@@ -204,7 +204,7 @@ class SecureCookie extends CookieBase implements CookieInterface {
      *
      * @return  string
      */
-    static private function clientSpecificKey($key) {
+    private static function clientSpecificKey($key) {
 
         if ( isset($_SERVER['REMOTE_ADDR']) ) {
 
