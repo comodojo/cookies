@@ -80,9 +80,9 @@ class CookieBase {
      *
      * @param   string  $cookieName    The cookie name
      *
-     * @return  Object  $this
+     * @return  \Comodojo\Cookies\CookieBase
      *
-     * @throws \Comodojo\Exception\CookieException
+     * @throws  \Comodojo\Exception\CookieException
      */
     public function setName($name) {
 
@@ -110,7 +110,7 @@ class CookieBase {
      *
      * @param   int     $timestamp
      *
-     * @return  Object  $this
+     * @return  \Comodojo\Cookies\CookieBase
      *
      * @throws \Comodojo\Exception\CookieException
      */
@@ -129,7 +129,7 @@ class CookieBase {
      *
      * @param   string  $location
      *
-     * @return  Object  $this
+     * @return  \Comodojo\Cookies\CookieBase
      *
      * @throws \Comodojo\Exception\CookieException
      */
@@ -148,7 +148,7 @@ class CookieBase {
      *
      * @param   string  $domain
      *
-     * @return  Object   $this
+     * @return  \Comodojo\Cookies\CookieBase
      *
      * @throws \Comodojo\Exception\CookieException
      */
@@ -167,7 +167,7 @@ class CookieBase {
      *
      * @param   bool     $mode
      *
-     * @return  Object   $this
+     * @return  \Comodojo\Cookies\CookieBase
      */
     public function setSecure($mode=true) {
 
@@ -182,7 +182,7 @@ class CookieBase {
      *
      * @param   bool     $mode
      *
-     * @return  Object   $this
+     * @return  \Comodojo\Cookies\CookieBase
      */
     public function setHttponly($mode=true) {
 
@@ -218,7 +218,7 @@ class CookieBase {
     /**
      * Load cookie content from request
      *
-     * @return Object $this
+     * @return  \Comodojo\Cookies\CookieBase
      *
      * @throws \Comodojo\Exception\CookieException
      */
@@ -273,7 +273,7 @@ class CookieBase {
      *
      * @param   string   $name  The cookie name
      *
-     * @return  Object \Comodojo\Cookies\Cookie
+     * @return  boolean
      *
      * @throws  \Comodojo\Exception\CookieException
      */
@@ -302,7 +302,7 @@ class CookieBase {
      *
      * @param   array    $properties    Array of properties cookie should have
      *
-     * @return  Object \Comodojo\Cookies\Cookie
+     * @return  \Comodojo\Cookies\CookieBase
      */
     static protected function cookieProperties($cookie, $properties, $serialize) {
 

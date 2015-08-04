@@ -73,12 +73,12 @@ class EncryptedCookie extends CookieBase implements CookieInterface {
     /**
      * Set cookie content
      *
-     * @param   mixed   $cookieValue    Cookie content
-     * @param   bool    $serialize      If true (default) cookie will be serialized first
+     * @param   mixed   $value      Cookie content
+     * @param   bool    $serialize  If true (default) cookie will be serialized first
      *
-     * @return  Object  $this
+     * @return  \Comodojo\Cookies\EncryptedCookie
      *
-     * @throws \Comodojo\Exception\CookieException
+     * @throws  \Comodojo\Exception\CookieException
      */
     public function setValue($value, $serialize=true) {
 
@@ -109,7 +109,7 @@ class EncryptedCookie extends CookieBase implements CookieInterface {
     /**
      * Get cookie content
      *
-     * @param   bool    $unserializes    If true (default) cookie will be unserialized first
+     * @param   bool    $unserialize    If true (default) cookie will be unserialized first
      *
      * @return  mixed
      */
@@ -144,7 +144,7 @@ class EncryptedCookie extends CookieBase implements CookieInterface {
      * 
      * @param   array    $properties    Array of properties cookie should have
      *
-     * @return  Object \Comodojo\Cookies\Cookie
+     * @return  \Comodojo\Cookies\EncryptedCookie
      *
      * @throws  \Comodojo\Exception\CookieException
      */
@@ -173,7 +173,7 @@ class EncryptedCookie extends CookieBase implements CookieInterface {
      *
      * @param   string   $key
      *
-     * @return  Object \Comodojo\Cookies\Cookie
+     * @return  \Comodojo\Cookies\EncryptedCookie
      *
      * @throws  \Comodojo\Exception\CookieException
      */

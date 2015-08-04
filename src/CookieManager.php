@@ -50,7 +50,7 @@ class CookieManager {
      *
      * @param   mixed    $cookie
      *
-     * @return  Object   $this
+     * @return  \Comodojo\Cookies\CookieManager
      */
     public function unregister($cookie) {
 
@@ -71,7 +71,7 @@ class CookieManager {
      *
      * @param   mixed    $cookie
      *
-     * @return  Object   $this
+     * @return  \Comodojo\Cookies\CookieManager
      */
     public function isRegistered($cookie) {
 
@@ -128,7 +128,7 @@ class CookieManager {
     /**
      * Save all registered cookies
      *
-     * @return  Object   $this
+     * @return  \Comodojo\Cookies\CookieManager
      */
     public function save() {
 
@@ -153,7 +153,7 @@ class CookieManager {
     /**
      * Load all registered cookies
      *
-     * @return  Object   $this
+     * @return  \Comodojo\Cookies\CookieManager
      */
     public function load() {
 

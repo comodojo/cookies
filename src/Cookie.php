@@ -29,7 +29,7 @@ class Cookie extends CookieBase implements CookieInterface {
      *
      * Setup cookie name
      *
-     * @param   string   $name
+     * @param  string   $name
      *
      * @throws \Comodojo\Exception\CookieException
      */
@@ -60,12 +60,12 @@ class Cookie extends CookieBase implements CookieInterface {
     /**
      * Set cookie content
      *
-     * @param   mixed   $cookieValue    Cookie content
-     * @param   bool    $serialize      If true (default) cookie will be serialized first
+     * @param   mixed   $value      Cookie content
+     * @param   bool    $serialize  If true (default) cookie will be serialized first
      *
-     * @return  Object  $this
+     * @return  \Comodojo\Cookies\Cookie
      *
-     * @throws \Comodojo\Exception\CookieException
+     * @throws  \Comodojo\Exception\CookieException
      */
     public function setValue($value, $serialize=true) {
 
@@ -84,7 +84,7 @@ class Cookie extends CookieBase implements CookieInterface {
     /**
      * Get cookie content
      *
-     * @param   bool    $unserializes    If true (default) cookie will be unserialized first
+     * @param   bool    $unserialize    If true (default) cookie will be unserialized first
      *
      * @return  mixed
      */
@@ -101,7 +101,7 @@ class Cookie extends CookieBase implements CookieInterface {
      * 
      * @param   array    $properties    Array of properties cookie should have
      *
-     * @return  Object \Comodojo\Cookies\Cookie
+     * @return  \Comodojo\Cookies\Cookie
      *
      * @throws  \Comodojo\Exception\CookieException
      */
@@ -128,7 +128,7 @@ class Cookie extends CookieBase implements CookieInterface {
      *
      * @param   string   $name  The cookie name
      *
-     * @return  Object \Comodojo\Cookies\Cookie
+     * @return  \Comodojo\Cookies\Cookie
      *
      * @throws  \Comodojo\Exception\CookieException
      */

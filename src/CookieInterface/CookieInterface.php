@@ -25,7 +25,7 @@ interface CookieInterface {
      *
      * @param   string  $cookieName    The cookie name
      *
-     * @return  Object  $this
+     * @return  \Comodojo\Cookies\CookieBase
      */
     public function setName($cookieName);
 
@@ -41,7 +41,7 @@ interface CookieInterface {
      *
      * @param   string $cookieValue
      *
-     * @return  Object  $this
+     * @return  \Comodojo\Cookies\CookieBase
      */
     public function setValue($cookieValue);
 
@@ -57,7 +57,7 @@ interface CookieInterface {
      *
      * @param   string  $time
      *
-     * @return  Object  $this
+     * @return  \Comodojo\Cookies\CookieBase
      */
     public function setExpire($time);
 
@@ -66,7 +66,7 @@ interface CookieInterface {
      *
      * @param   string  $location
      *
-     * @return  Object  $this
+     * @return  \Comodojo\Cookies\CookieBase
      */
     public function setPath($location);
 
@@ -75,7 +75,7 @@ interface CookieInterface {
      *
      * @param   string  $domain
      *
-     * @return  ObjectRequest   $this
+     * @return  \Comodojo\Cookies\CookieBase
      */
     public function setDomain($domain);
 
@@ -83,26 +83,29 @@ interface CookieInterface {
      * Set if the cookie should be transmitted only via https
      *
      * @param   bool  $mode
+     *
+     * @return  \Comodojo\Cookies\CookieBase
      */
-    public function setSecure($header);
+    public function setSecure($mode);
 
     /**
      * Set if cookie should be available only to HTTP protocol
      *
-     * @return
+     * @return  \Comodojo\Cookies\CookieBase
      */
     public function setHttponly($mode);
 
     /**
      * Set cookie
      *
+     * @return  boolean
      */
     public function save();
 
     /**
      * Get cookie
      *
-     * @return  strinng
+     * @return  \Comodojo\Cookies\CookieBase
      */
     public function load();
 
