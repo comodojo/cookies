@@ -14,14 +14,13 @@ It could be easily extended defining a custom cookie class that implements the `
 
 Install [composer](https://getcomposer.org/), then:
 
-`` composer require comodojo/cookies 1.0.* ``
+`` composer require comodojo/cookies 1.1.* ``
 
 ## Plain cookies
 
 To setup a cookie:
 
 ```php
-
 // create an instance of \Comodojo\Cookies\Cookie
 $cookie = new \Comodojo\Cookies\Cookie('my_cookie');
 
@@ -39,7 +38,6 @@ $result = $cookie->setValue( "Lorem ipsum dolor" )
 Alternatively, use the static method `` Cookie::create() `` (parameters are optional):
 
 ```php
-
 // define a new cookie
 $cookie = Cookie::create('my_cookie', array(
     'value'   => "Lorem ipsum dolor"
@@ -66,7 +64,6 @@ The class `` \Comodojo\Cookies\EncryptedCookie `` provides an extension of plain
 To setup a EncryptedCookie:
 
 ```php
-
 // create an instance of \Comodojo\Cookies\EncryptedCookie
 $cookie = new \Comodojo\Cookies\EncryptedCookie('my_secure_cookie', 'myverycomplexsecretkey');
 
@@ -84,7 +81,6 @@ $result = $cookie->setValue( "Lorem ipsum dolor" )
 Alternatively, use the static method `` EncryptedCookie::create() `` (parameters are optional):
 
 ```php
-
 // define a new cookie
 $cookie = EncryptedCookie::create('my_secure_cookie', 'myverycomplexsecretkey', array(
     'value'   => "Lorem ipsum dolor"
@@ -110,7 +106,6 @@ This can be useful in internal networks or where clients does not often change I
 To setup a SecureCookie:
 
 ```php
-
 // create an instance of \Comodojo\Cookies\SecureCookie
 $cookie = new \Comodojo\Cookies\SecureCookie('my_secure_cookie', 'myverycomplexsecretkey');
 
@@ -128,7 +123,6 @@ $result = $cookie->setValue( "Lorem ipsum dolor" )
 Alternatively, use the static method `` SecureCookie::create() `` (parameters are optional):
 
 ```php
-
 // define a new cookie
 $cookie = SecureCookie::create('my_secure_cookie', 'myverycomplexsecretkey', array(
     'value'   => "Lorem ipsum dolor"
@@ -152,7 +146,6 @@ Cookie manager is a class that accepts objects that implement the `` \Comodojo\C
 For example, to save multiple cookies:
 
 ```php
-
 // init a new cookie manager
 $manager = new \Comodojo\Cookies\CookieManager();
 
@@ -170,7 +163,6 @@ $result = $manager->save();
 To get multiple cookies:
 
 ```php
-
 // init a new cookie manager
 $manager = new \Comodojo\Cookies\CookieManager();
 
