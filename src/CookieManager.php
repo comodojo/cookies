@@ -109,7 +109,7 @@ class CookieManager {
 
         try {
             
-            foreach ($this->cookies as $name=>$cookie) {
+            foreach ( $this->cookies as $name=>$cookie ) {
                 
                 $cookies[$name] = $cookie->getValue();
 
@@ -134,7 +134,7 @@ class CookieManager {
 
         try {
 
-            foreach ($this->cookies as $c) {
+            foreach ( $this->cookies as $c ) {
                 
                 $c->save();
 
@@ -159,7 +159,7 @@ class CookieManager {
 
         try {
 
-            foreach ($this->cookies as $c) {
+            foreach ( $this->cookies as $c ) {
                 
                 $c->load();
 
