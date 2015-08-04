@@ -73,7 +73,7 @@ class Cookie extends CookieBase implements CookieInterface {
 
         $cookie_value = $serialize === true ? serialize($value) : $value;
 
-        if ( strlen($value) > $this->max_cookie_size ) throw new CookieException("Cookie size larger than 4KB");
+        if ( strlen($cookie_value) > $this->max_cookie_size ) throw new CookieException("Cookie size larger than 4KB");
 
         $this->value = $cookie_value;
 

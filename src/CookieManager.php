@@ -79,7 +79,7 @@ class CookieManager {
 
         $name = ($cookie instanceof CookieInterface) ? $cookie->getName() : $cookie;
 
-        return array_key_exists($cookie_name, $this->cookies);
+        return array_key_exists($name, $this->cookies);
 
     }
 

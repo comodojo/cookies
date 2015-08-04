@@ -77,6 +77,79 @@ class EncryptedCookieTest extends \PHPUnit_Framework_TestCase {
 
     }
 
+    public function testConstruct() {
+
+        $cookie = new \Comodojo\Cookies\EncryptedCookie('test_cookie','test_key');
+
+        $this->assertInstanceOf('\Comodojo\Cookies\EncryptedCookie', $cookie);
+
+    }
+
+    public function testSetGetStringValue() {
+
+        $value = 'this is a sample value';
+
+        $cookie = new \Comodojo\Cookies\EncryptedCookie('test_cookie','test_key');
+
+        $result = $cookie->setValue($value);
+
+        $this->assertInstanceOf('\Comodojo\Cookies\EncryptedCookie', $cookie);
+
+        $result = $cookie->getValue();
+
+        $this->assertEquals($value, $result);
+
+    }
+
+    public function testGetValueUnserialized() {
+
+        $value = 'this is a sample value';
+
+        $cookie = new \Comodojo\Cookies\EncryptedCookie('test_cookie','test_key');
+
+        $result = $cookie->setValue($value, false);
+
+        $this->assertInstanceOf('\Comodojo\Cookies\EncryptedCookie', $cookie);
+
+        $result = $cookie->getValue(false);
+
+        $this->assertEquals($value, $result);
+
+    }
+
+    public function testSetGetArrayValue() {
+
+        $value = array("this","is","a","sample","value");
+
+        $cookie = new \Comodojo\Cookies\EncryptedCookie('test_cookie','test_key');
+
+        $result = $cookie->setValue($value);
+
+        $this->assertInstanceOf('\Comodojo\Cookies\EncryptedCookie', $cookie);
+
+        $result = $cookie->getValue();
+
+        $this->assertEquals($value, $result);
+
+    }
+
+    public function testCreate() {
+
+        $cookie = \Comodojo\Cookies\EncryptedCookie::create('test_cookie','test_key');
+
+        $this->assertInstanceOf('\Comodojo\Cookies\EncryptedCookie', $cookie);        
+
+    }
+    
+    /**
+     * @expectedException        Comodojo\Exception\CookieException
+     */
+    public function testRetrieve() {
+
+        $cookie = \Comodojo\Cookies\EncryptedCookie::retrieve('test_cookie','test_key');
+
+    }
+
     public static function tearDownAfterClass() {
 
         unlink(__DIR__."/../tmp/ENCRYPTED_COOKIE_TMP");

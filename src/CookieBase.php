@@ -137,7 +137,7 @@ class CookieBase {
 
         if ( !is_string($location) ) throw new CookieException("Invalid path attribute");
         
-        $this->path = $path;
+        $this->path = $location;
 
         return $this;
 

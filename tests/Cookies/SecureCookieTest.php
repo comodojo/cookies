@@ -77,6 +77,79 @@ class SecureCookieTest extends \PHPUnit_Framework_TestCase {
 
     }
 
+    public function testConstruct() {
+
+        $cookie = new \Comodojo\Cookies\SecureCookie('test_cookie','test_key');
+
+        $this->assertInstanceOf('\Comodojo\Cookies\SecureCookie', $cookie);
+
+    }
+
+    public function testSetGetStringValue() {
+
+        $value = 'this is a sample value';
+
+        $cookie = new \Comodojo\Cookies\SecureCookie('test_cookie','test_key');
+
+        $result = $cookie->setValue($value);
+
+        $this->assertInstanceOf('\Comodojo\Cookies\SecureCookie', $cookie);
+
+        $result = $cookie->getValue();
+
+        $this->assertEquals($value, $result);
+
+    }
+
+    public function testGetValueUnserialized() {
+
+        $value = 'this is a sample value';
+
+        $cookie = new \Comodojo\Cookies\SecureCookie('test_cookie','test_key');
+
+        $result = $cookie->setValue($value, false);
+
+        $this->assertInstanceOf('\Comodojo\Cookies\SecureCookie', $cookie);
+
+        $result = $cookie->getValue(false);
+
+        $this->assertEquals($value, $result);
+
+    }
+
+    public function testSetGetArrayValue() {
+
+        $value = array("this","is","a","sample","value");
+
+        $cookie = new \Comodojo\Cookies\SecureCookie('test_cookie','test_key');
+
+        $result = $cookie->setValue($value);
+
+        $this->assertInstanceOf('\Comodojo\Cookies\SecureCookie', $cookie);
+
+        $result = $cookie->getValue();
+
+        $this->assertEquals($value, $result);
+
+    }
+
+    public function testCreate() {
+
+        $cookie = \Comodojo\Cookies\SecureCookie::create('test_cookie','test_key');
+
+        $this->assertInstanceOf('\Comodojo\Cookies\SecureCookie', $cookie);        
+
+    }
+    
+    /**
+     * @expectedException        Comodojo\Exception\CookieException
+     */
+    public function testRetrieve() {
+
+        $cookie = \Comodojo\Cookies\SecureCookie::retrieve('test_cookie','test_key');
+
+    }
+
     public static function tearDownAfterClass() {
 
         unlink(__DIR__."/../tmp/SECURE_COOKIE_TMP");

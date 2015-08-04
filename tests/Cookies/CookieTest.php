@@ -77,6 +77,79 @@ class CookieTest extends \PHPUnit_Framework_TestCase {
 
     }
 
+    public function testConstruct() {
+
+        $cookie = new \Comodojo\Cookies\Cookie('test_cookie');
+
+        $this->assertInstanceOf('\Comodojo\Cookies\Cookie', $cookie);
+
+    }
+
+    public function testSetGetStringValue() {
+
+        $value = 'this is a sample value';
+
+        $cookie = new \Comodojo\Cookies\Cookie('test_cookie');
+
+        $result = $cookie->setValue($value);
+
+        $this->assertInstanceOf('\Comodojo\Cookies\Cookie', $cookie);
+
+        $result = $cookie->getValue();
+
+        $this->assertEquals($value, $result);
+
+    }
+
+    public function testGetValueUnserialized() {
+
+        $value = 'this is a sample value';
+
+        $cookie = new \Comodojo\Cookies\Cookie('test_cookie');
+
+        $result = $cookie->setValue($value, false);
+
+        $this->assertInstanceOf('\Comodojo\Cookies\Cookie', $cookie);
+
+        $result = $cookie->getValue(false);
+
+        $this->assertEquals($value, $result);
+
+    }
+
+    public function testSetGetArrayValue() {
+
+        $value = array("this","is","a","sample","value");
+
+        $cookie = new \Comodojo\Cookies\Cookie('test_cookie');
+
+        $result = $cookie->setValue($value);
+
+        $this->assertInstanceOf('\Comodojo\Cookies\Cookie', $cookie);
+
+        $result = $cookie->getValue();
+
+        $this->assertEquals($value, $result);
+
+    }
+
+    public function testCreate() {
+
+        $cookie = \Comodojo\Cookies\Cookie::create('test_cookie');
+
+        $this->assertInstanceOf('\Comodojo\Cookies\Cookie', $cookie);        
+
+    }
+    
+    /**
+     * @expectedException        Comodojo\Exception\CookieException
+     */
+    public function testRetrieve() {
+
+        $cookie = \Comodojo\Cookies\Cookie::retrieve('test_cookie');
+
+    }
+
     public static function tearDownAfterClass() {
 
         unlink(__DIR__."/../tmp/COOKIE_TMP");

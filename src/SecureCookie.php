@@ -92,7 +92,11 @@ class SecureCookie extends CookieBase implements CookieInterface {
 
         $cipher->setKey( self::clientSpecificKey($this->key) );
 
-        $cookie_value = $cipher->encrypt($value);
+        // added base64 encoding to avoid problems with binary data
+
+        $encrypted_value = $cipher->encrypt($value);
+
+        $cookie_value = base64_encode($encrypted_value);
 
         if ( strlen($cookie_value) > $this->max_cookie_size ) throw new CookieException("Cookie size larger than 4KB");
 
@@ -117,7 +121,13 @@ class SecureCookie extends CookieBase implements CookieInterface {
 
         $cipher->setKey( self::clientSpecificKey($this->key) );
 
-        $cookie = $cipher->decrypt($this->value);
+        // added base64 encoding to avoid problems with binary data
+
+        $encoded_cookie = base64_decode($this->value);
+
+        if ( $encoded_cookie === false ) throw new CookieException("Cookie data cannot be decoded");
+
+        $cookie = $cipher->decrypt($encoded_cookie);
 
         if ( $cookie === false ) throw new CookieException("Cookie data cannot be dectypted");
 

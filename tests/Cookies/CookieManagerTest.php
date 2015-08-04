@@ -47,6 +47,62 @@ class CookieManagerTest extends \PHPUnit_Framework_TestCase {
 
     }
 
+    public function testManagerCookiesHandling() {
+
+        $cookie = new \Comodojo\Cookies\Cookie('test_cookie');
+
+        $manager = new \Comodojo\Cookies\CookieManager();
+
+        $result = $manager->register($cookie);
+
+        $this->assertInstanceOf('\Comodojo\Cookies\CookieManager', $result);
+
+        $result = $manager->isRegistered('test_cookie');
+
+        $this->assertTrue($result);
+
+        $result = $manager->isRegistered($cookie);
+
+        $this->assertTrue($result);
+
+        $result = $manager->get('test_cookie');
+
+        $this->assertInstanceOf('\Comodojo\Cookies\Cookie', $result);
+
+        $result = $manager->unregister('test_cookie');
+
+        $this->assertInstanceOf('\Comodojo\Cookies\CookieManager', $result);
+
+    }
+
+    public function testManagerGetValues() {
+
+        $cookie1 = new \Comodojo\Cookies\Cookie('test_cookie_1');
+
+        $cookie1->setValue('value1');
+
+        $cookie2 = new \Comodojo\Cookies\Cookie('test_cookie_2');
+
+        $cookie2->setValue('value2');
+
+        $manager = new \Comodojo\Cookies\CookieManager();
+
+        $manager->register($cookie1)->register($cookie2);
+
+        $result = $manager->getValues();
+
+        $this->assertInternalType('array', $result);
+
+        $this->assertArrayHasKey("test_cookie_1", $result);
+
+        $this->assertArrayHasKey("test_cookie_2", $result);
+
+        $this->assertEquals('value1', $result['test_cookie_1']);
+
+        $this->assertEquals('value2', $result['test_cookie_2']);
+
+    }
+
     public static function tearDownAfterClass() {
 
         unlink(__DIR__."/../tmp/MANAGER_COOKIE_TMP");
