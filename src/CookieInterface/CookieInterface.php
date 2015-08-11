@@ -43,14 +43,14 @@ interface CookieInterface {
      *
      * @return  \Comodojo\Cookies\CookieBase
      */
-    public function setValue($cookieValue);
+    public function setValue($cookieValue, $serialize);
 
     /**
      * Get cookie content
      *
      * @return  string
      */
-    public function getValue();
+    public function getValue($unserialize);
 
     /**
      * Set cookie's expiration time

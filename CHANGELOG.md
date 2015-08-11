@@ -1,5 +1,17 @@
 # Changelog
 
+## Version 1.1.1
+
+### Added
+- added comodojo/exceptions as a dependency
+
+### Fixed
+- Fixed `CookieInterface` methods signatures
+- Fixed `CookieBase::exists` method
+
+### Other
+- Better commenting 
+
 ## Version 1.1.0
 
 ### Added

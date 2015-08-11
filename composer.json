@@ -9,7 +9,7 @@
         "cookie",
         "comodojo"
     ],
-    "homepage": "http://comodojo.org",
+    "homepage": "https://comodojo.org",
      "support": {
         "issues": "https://github.com/comodojo/cookies/issues"
     },
@@ -22,13 +22,13 @@
     ],
     "autoload": {
         "psr-4": {
-            "Comodojo\\Exception\\": "src/Exception",
             "Comodojo\\Cookies\\": "src"
         }
     },
     "require": {
         "php": ">=5.3.0",
-        "phpseclib/phpseclib": "0.3.*"
+        "phpseclib/phpseclib": "0.3.*",
+        "comodojo/exceptions": "@stable"
     },
     "require-dev": {
         "phpunit/phpunit": "~4.0",

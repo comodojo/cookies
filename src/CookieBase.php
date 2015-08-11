@@ -22,47 +22,52 @@ use \Comodojo\Exception\CookieException;
 
 class CookieBase {
 
-    /*
+    /**
      * The cookie name
      *
      * @var string
      */
     protected $name = null;
 
-    /*
+    /**
      * Cookie value (native string or serialized one)
      *
      * @var string
      */
     protected $value = null;
 
-    /*
+    /**
+     * Expiration time
      *
-     * @var
+     * @var integer
      */
     protected $expire = null;
 
-    /*
+    /**
+     * Path of cookie
      *
-     * @var
+     * @var string
      */
     protected $path = null;
 
-    /*
+    /**
+     * Domain of cookie
      *
-     * @var
+     * @var string
      */
     protected $domain = null;
 
-    /*
+    /**
+     * Secure flag
      *
-     * @var
+     * @var bool
      */
     protected $secure = false;
 
-    /*
+    /**
+     * Httponly flag
      *
-     * @var
+     * @var bool
      */
     protected $httponly = false;
 
@@ -112,7 +117,7 @@ class CookieBase {
      *
      * @return  \Comodojo\Cookies\CookieBase
      *
-     * @throws \Comodojo\Exception\CookieException
+     * @throws  \Comodojo\Exception\CookieException
      */
     public function setExpire($timestamp) {
 
@@ -131,7 +136,7 @@ class CookieBase {
      *
      * @return  \Comodojo\Cookies\CookieBase
      *
-     * @throws \Comodojo\Exception\CookieException
+     * @throws  \Comodojo\Exception\CookieException
      */
     public function setPath($location) {
 
@@ -150,7 +155,7 @@ class CookieBase {
      *
      * @return  \Comodojo\Cookies\CookieBase
      *
-     * @throws \Comodojo\Exception\CookieException
+     * @throws  \Comodojo\Exception\CookieException
      */
     public function setDomain($domain) {
 
@@ -220,11 +225,11 @@ class CookieBase {
      *
      * @return  \Comodojo\Cookies\CookieBase
      *
-     * @throws \Comodojo\Exception\CookieException
+     * @throws  \Comodojo\Exception\CookieException
      */
     public function load() {
 
-        if ( !$this->exists($this->name) ) throw new CookieException("Cookie does not exists");
+        if ( !$this->exists() ) throw new CookieException("Cookie does not exists");
 
         $this->value = $_COOKIE[$this->name];
 
@@ -241,7 +246,7 @@ class CookieBase {
      */
     public function delete() {
 
-        if ( !$this->exists($this->name) ) return true;
+        if ( !$this->exists() ) return true;
 
         if ( setcookie(
             $this->name,
