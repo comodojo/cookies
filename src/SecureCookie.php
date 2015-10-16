@@ -3,6 +3,8 @@
 use \Comodojo\Cookies\CookieInterface\CookieInterface;
 use \Comodojo\Exception\CookieException;
 use \Comodojo\Cookies\CookieBase;
+use \phpseclib\Crypt\AES;
+use \phpseclib\Crypt\Base;
 
 /**
  * AES-encrypted cookie
@@ -86,7 +88,7 @@ class SecureCookie extends CookieBase implements CookieInterface {
 
         if ( $serialize === true ) $value = serialize($value);
 
-        $cipher = new \Crypt_AES(CRYPT_AES_MODE_ECB);
+        $cipher = new AES(Base::MODE_ECB);
 
         $cipher->setKeyLength(256);
 
@@ -115,7 +117,7 @@ class SecureCookie extends CookieBase implements CookieInterface {
      */
     public function getValue($unserialize = true) {
 
-        $cipher = new \Crypt_AES(CRYPT_AES_MODE_ECB);
+        $cipher = new AES(Base::MODE_ECB);
 
         $cipher->setKeyLength(256);
 
