@@ -1,10 +1,11 @@
 language: php
 
 php:
-  - 5.3
   - 5.4
   - 5.5
   - 5.6
+  - 7.0
+  - 7.1
   - hhvm
 
 matrix:
@@ -14,8 +15,7 @@ matrix:
 sudo: required
 
 before_script:
-  - if [[ "$TRAVIS_PHP_VERSION" == 5.3* ]]; then bash tests/runme_before_53.sh; fi
-  - if [[ "$TRAVIS_PHP_VERSION" != 5.3* ]]; then bash tests/runme_before.sh; fi
+  - bash tests/runme_before.sh
   - composer install --prefer-source
 
 after_script:

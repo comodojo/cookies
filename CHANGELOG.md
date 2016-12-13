@@ -1,5 +1,21 @@
 # Changelog
 
+## Version 2.0.0-alpha
+
+### Added
+- `CookieManager::add()`
+- `CookieManager::del()`
+- `CookieManager::has()`
+
+### Deprecated
+- `CookieManager::register()` is now an alias for CookieManager::add(), will be removed in 2.1 branch
+- `CookieManager::unregister()` is now an alias for CookieManager::del(), will be removed in 2.1 branch
+- `CookieManager::isRegistered()` is now an alias for CookieManager::has(), will be removed in 2.1 branch
+
+### Other
+- PHP min version to 5.4
+- Update phpseclib to 2.0 branch
+
 ## Version 1.1.1
 
 ### Added
@@ -10,7 +26,7 @@
 - Fixed `CookieBase::exists` method
 
 ### Other
-- Better commenting 
+- Better commenting
 
 ## Version 1.1.0
 

@@ -4,13 +4,13 @@ use \Comodojo\Exception\CookieException;
 
 /**
  * Base class, to be estended implementing a CookieInterface
- * 
+ *
  * @package     Comodojo Spare Parts
  * @author      Marco Giovinazzi <marco.giovinazzi@comodojo.org>
  * @license     MIT
  *
  * LICENSE:
- * 
+ *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -20,7 +20,7 @@ use \Comodojo\Exception\CookieException;
  * THE SOFTWARE.
  */
 
-class CookieBase {
+abstract class AbstractCookie implements CookieInterface {
 
     /**
      * The cookie name
@@ -81,17 +81,43 @@ class CookieBase {
     protected $max_cookie_size = 4000;
 
     /**
-     * Set cookie name
+     * Default cookie's constructor
      *
-     * @param   string  $name    The cookie name
+     * @param string $name
+     * @param int $max_cookie_size
      *
-     * @return  \Comodojo\Cookies\CookieBase
-     *
-     * @throws  \Comodojo\Exception\CookieException
+     * @throws CookieException
+     */
+    public function __construct($name, $max_cookie_size = null) {
+
+        try {
+
+            $this->setName($name);
+
+        } catch (CookieException $ce) {
+
+            throw $ce;
+
+        }
+
+        if ( is_int($max_cookie_size) ) {
+
+            $this->max_cookie_size = filter_var($max_cookie_size, FILTER_VALIDATE_INT, array(
+                'options' => array(
+                    'default' => 4000
+                )
+            ));
+
+        }
+
+    }
+
+    /**
+     * {@inheritdoc}
      */
     public function setName($name) {
 
-        if ( empty($name) OR !is_scalar($name) ) throw new CookieException("Invalid cookie name");
+        if ( empty($name) || !is_scalar($name) ) throw new CookieException("Invalid cookie name");
 
         $this->name = $name;
 
@@ -100,9 +126,7 @@ class CookieBase {
     }
 
     /**
-     * Get cookie name
-     *
-     * @return  string
+     * {@inheritdoc}
      */
     public function getName() {
 
@@ -111,13 +135,17 @@ class CookieBase {
     }
 
     /**
-     * Set cookie's expiration time
-     *
-     * @param   int     $timestamp
-     *
-     * @return  \Comodojo\Cookies\CookieBase
-     *
-     * @throws  \Comodojo\Exception\CookieException
+     * {@inheritdoc}
+     */
+    abstract function setValue($value, $serialize);
+
+    /**
+     * {@inheritdoc}
+     */
+    abstract function getValue($unserialize);
+
+    /**
+     * {@inheritdoc}
      */
     public function setExpire($timestamp) {
 
@@ -130,18 +158,12 @@ class CookieBase {
     }
 
     /**
-     * Set cookie's path
-     *
-     * @param   string  $location
-     *
-     * @return  \Comodojo\Cookies\CookieBase
-     *
-     * @throws  \Comodojo\Exception\CookieException
+     * {@inheritdoc}
      */
     public function setPath($location) {
 
         if ( !is_string($location) ) throw new CookieException("Invalid path attribute");
-        
+
         $this->path = $location;
 
         return $this;
@@ -149,17 +171,11 @@ class CookieBase {
     }
 
     /**
-     * Set cookie's domain
-     *
-     * @param   string  $domain
-     *
-     * @return  \Comodojo\Cookies\CookieBase
-     *
-     * @throws  \Comodojo\Exception\CookieException
+     * {@inheritdoc}
      */
     public function setDomain($domain) {
 
-        if ( !is_scalar($domain) OR !self::checkDomain($domain) ) throw new CookieException("Invalid domain attribute");
+        if ( !is_scalar($domain) || !self::checkDomain($domain) ) throw new CookieException("Invalid domain attribute");
 
         $this->domain = $domain;
 
@@ -168,11 +184,7 @@ class CookieBase {
     }
 
     /**
-     * Set if the cookie should be transmitted only via https
-     *
-     * @param   bool     $mode
-     *
-     * @return  \Comodojo\Cookies\CookieBase
+     * {@inheritdoc}
      */
     public function setSecure($mode = true) {
 
@@ -183,11 +195,7 @@ class CookieBase {
     }
 
     /**
-     * Set if cookie should be available only to HTTP protocol
-     *
-     * @param   bool     $mode
-     *
-     * @return  \Comodojo\Cookies\CookieBase
+     * {@inheritdoc}
      */
     public function setHttponly($mode = true) {
 
@@ -198,11 +206,7 @@ class CookieBase {
     }
 
     /**
-     * Save cookie
-     *
-     * @return bool
-     *
-     * @throws \Comodojo\Exception\CookieException
+     * {@inheritdoc}
      */
     public function save() {
 
@@ -221,11 +225,7 @@ class CookieBase {
     }
 
     /**
-     * Load cookie content from request
-     *
-     * @return  \Comodojo\Cookies\CookieBase
-     *
-     * @throws  \Comodojo\Exception\CookieException
+     * {@inheritdoc}
      */
     public function load() {
 
@@ -238,11 +238,7 @@ class CookieBase {
     }
 
     /**
-     * Delete a cookie
-     *
-     * @return bool
-     *
-     * @throws \Comodojo\Exception\CookieException
+     * {@inheritdoc}
      */
     public function delete() {
 
@@ -263,9 +259,7 @@ class CookieBase {
     }
 
     /**
-     * Check if cookie exists
-     *
-     * @return  bool
+     * {@inheritdoc}
      */
     public function exists() {
 
@@ -291,7 +285,7 @@ class CookieBase {
             $return = $cookie->delete();
 
         } catch (CookieException $ce) {
-            
+
             throw $ce;
 
         }
@@ -311,14 +305,14 @@ class CookieBase {
      *
      * @return  \Comodojo\Cookies\CookieBase
      */
-    protected static function cookieProperties(\Comodojo\Cookies\CookieInterface\CookieInterface $cookie, $properties, $serialize) {
+    protected static function cookieProperties(CookieInterface $cookie, $properties, $serialize) {
 
         foreach ( $properties as $property => $value ) {
-                
+
             switch ( $property ) {
 
                 case 'value':
-                    
+
                     $cookie->setValue($value, $serialize);
 
                     break;
@@ -371,7 +365,7 @@ class CookieBase {
      * @return  bool
      */
     protected static function checkDomain($domain_name) {
-    
+
         if ( $domain_name[0] == '.' ) $domain_name = substr($domain_name, 1);
 
         return (preg_match("/^([a-z\d](-*[a-z\d])*)(\.([a-z\d](-*[a-z\d])*))*$/i", $domain_name) //valid chars check
