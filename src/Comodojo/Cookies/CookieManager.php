@@ -122,6 +122,17 @@ class CookieManager {
     }
 
     /**
+     * Get the whole cookies' archive
+     *
+     * @return array
+     */
+    public function getAll() {
+
+        return $this->cookies;
+
+    }
+
+    /**
      * Get values from all registered cookies and dump as an associative array
      *
      * @return  array

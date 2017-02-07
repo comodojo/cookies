@@ -6,6 +6,7 @@
 - `CookieManager::add()`
 - `CookieManager::del()`
 - `CookieManager::has()`
+- `CookieManager::getAll()`
 
 ### Deprecated
 - `CookieManager::register()` is now an alias for CookieManager::add(), will be removed in 2.1 branch
