@@ -53,15 +53,15 @@ class CookieManagerTest extends \PHPUnit_Framework_TestCase {
 
         $manager = new \Comodojo\Cookies\CookieManager();
 
-        $result = $manager->register($cookie);
+        $result = $manager->add($cookie);
 
         $this->assertInstanceOf('\Comodojo\Cookies\CookieManager', $result);
 
-        $result = $manager->isRegistered('test_cookie');
+        $result = $manager->has('test_cookie');
 
         $this->assertTrue($result);
 
-        $result = $manager->isRegistered($cookie);
+        $result = $manager->has($cookie);
 
         $this->assertTrue($result);
 
@@ -69,7 +69,7 @@ class CookieManagerTest extends \PHPUnit_Framework_TestCase {
 
         $this->assertInstanceOf('\Comodojo\Cookies\Cookie', $result);
 
-        $result = $manager->unregister('test_cookie');
+        $result = $manager->del('test_cookie');
 
         $this->assertInstanceOf('\Comodojo\Cookies\CookieManager', $result);
 
@@ -87,7 +87,7 @@ class CookieManagerTest extends \PHPUnit_Framework_TestCase {
 
         $manager = new \Comodojo\Cookies\CookieManager();
 
-        $manager->register($cookie1)->register($cookie2);
+        $manager->add($cookie1)->add($cookie2);
 
         $result = $manager->getValues();
 

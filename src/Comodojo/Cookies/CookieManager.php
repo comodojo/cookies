@@ -1,17 +1,16 @@
 <?php namespace Comodojo\Cookies;
 
-use \Comodojo\Cookies\CookieInterface\CookieInterface;
 use \Comodojo\Exception\CookieException;
 
 /**
  * Manage multiple cookies of different types at one time
- * 
+ *
  * @package     Comodojo Spare Parts
  * @author      Marco Giovinazzi <marco.giovinazzi@comodojo.org>
  * @license     MIT
  *
  * LICENSE:
- * 
+ *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -31,13 +30,13 @@ class CookieManager {
     private $cookies = array();
 
     /**
-     * Register cookie in manager
+     * Add a cookie to the stack
      *
-     * @param   \Comodojo\Cookies\CookieInterface\CookieInterface     $cookie
+     * @param CookieInterface $cookie
      *
-     * @return  Object   $this
+     * @return static
      */
-    public function register(CookieInterface $cookie) {
+    public function add(CookieInterface $cookie) {
 
         $this->cookies[$cookie->getName()] = $cookie;
 
@@ -46,13 +45,21 @@ class CookieManager {
     }
 
     /**
-     * Register cookie in manager
-     *
-     * @param   mixed    $cookie
-     *
-     * @return  \Comodojo\Cookies\CookieManager
+     * @deprecated 2.1.0
+     * @see CookieManager::add()
      */
-    public function unregister($cookie) {
+    public function register(CookieInterface $cookie) {
+        return $this->add($cookie);
+    }
+
+    /**
+     * Delete a cookie from the stack
+     *
+     * @param CookieInterface|string $cookie
+     *
+     * @return static
+     */
+    public function del($cookie) {
 
         if ( empty($cookie) ) throw new CookieException("Invalid cookie object or name");
 
@@ -67,13 +74,21 @@ class CookieManager {
     }
 
     /**
-     * Check if cookie has been registered in manager
-     *
-     * @param   mixed    $cookie
-     *
-     * @return  \Comodojo\Cookies\CookieManager
+     * @deprecated 2.1.0
+     * @see CookieManager::del()
      */
-    public function isRegistered($cookie) {
+    public function unregister($cookie) {
+        return $this->del($cookie);
+    }
+
+    /**
+     * Check if cookie is into the stack
+     *
+     * @param CookieInterface|string $cookie
+     *
+     * @return static
+     */
+    public function has($cookie) {
 
         if ( empty($cookie) ) throw new CookieException("Invalid cookie object or name");
 
@@ -84,17 +99,36 @@ class CookieManager {
     }
 
     /**
+     * @deprecated 2.1.0
+     * @see CookieManager::has()
+     */
+    public function isRegistered($cookie) {
+        return $this->has($cookie);
+    }
+
+    /**
      * Get cookie from $cookie_name
      *
-     * @param   string   $cookie_name
+     * @param string $cookie_name
      *
-     * @return  \Comodojo\Cookies\CookieInterface\CookieInterface
+     * @return CookieInterface
      */
     public function get($cookie_name) {
 
         if ( $this->isRegistered($cookie_name) ) return $this->cookies[$cookie_name];
 
         else throw new CookieException("Cookie is not registered");
+
+    }
+
+    /**
+     * Get the whole cookies' archive
+     *
+     * @return array
+     */
+    public function getAll() {
+
+        return $this->cookies;
 
     }
 
@@ -108,15 +142,15 @@ class CookieManager {
         $cookies = array();
 
         try {
-            
+
             foreach ( $this->cookies as $name=>$cookie ) {
-                
+
                 $cookies[$name] = $cookie->getValue();
 
             }
 
         } catch (CookieException $ce) {
-            
+
             throw $ce;
 
         }
@@ -128,20 +162,20 @@ class CookieManager {
     /**
      * Save all registered cookies
      *
-     * @return  \Comodojo\Cookies\CookieManager
+     * @return static
      */
     public function save() {
 
         try {
 
             foreach ( $this->cookies as $c ) {
-                
+
                 $c->save();
 
             }
-            
+
         } catch (CookieException $ce) {
-            
+
             throw $ce;
 
         }
@@ -153,20 +187,20 @@ class CookieManager {
     /**
      * Load all registered cookies
      *
-     * @return  \Comodojo\Cookies\CookieManager
+     * @return static
      */
     public function load() {
 
         try {
 
             foreach ( $this->cookies as $c ) {
-                
+
                 $c->load();
 
             }
-            
+
         } catch (CookieException $ce) {
-            
+
             throw $ce;
 
         }

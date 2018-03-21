@@ -12,9 +12,6 @@ php:
 matrix:
   allow_failures:
     - php: hhvm
-    - php: 7.0
-    - php: 7.1
-    - php: 7.2
 
 sudo: required
 

@@ -1,14 +1,14 @@
-<?php namespace Comodojo\Cookies\CookieInterface;
+<?php namespace Comodojo\Cookies;
 
 /**
  * Object cookie interface
- * 
+ *
  * @package     Comodojo Spare Parts
  * @author      Marco Giovinazzi <marco.giovinazzi@comodojo.org>
  * @license     MIT
  *
  * LICENSE:
- * 
+ *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -20,35 +20,53 @@
 
 interface CookieInterface {
 
+    const COOKIE_MAX_SIZE = 4000;
+
     /**
      * Set cookie name
      *
-     * @param   string  $cookieName    The cookie name
+     * @param string $name
+     *   The cookie name.
      *
-     * @return  \Comodojo\Cookies\CookieBase
+     * @return static
+     *   The invoked object.
+     *
+     * @throws CookieException
      */
-    public function setName($cookieName);
+    public function setName($name);
 
     /**
      * Get cookie name
      *
-     * @return  string
+     * @return string
+     *   Name of cookie
      */
     public function getName();
 
     /**
-     * Set cookie content
+     * Set value of cookie
      *
-     * @param   string $cookieValue
+     * @param string $value
+     *   The value of cookie.
      *
-     * @return  \Comodojo\Cookies\CookieBase
+     * @param bool $serialize
+     *   If true, cookie will be serialized (default)
+     *
+     * @return static
+     *   The invoked object.
+     *
+     * @throws CookieException
      */
-    public function setValue($cookieValue, $serialize);
+    public function setValue($value, $serialize);
 
     /**
-     * Get cookie content
+     * Get cookie value
      *
-     * @return  string
+     * @param bool $unserialize
+     *   If true, cookie will be unserialized (default)
+     *
+     * @return string
+     *   Value of cookie
      */
     public function getValue($unserialize);
 
@@ -57,7 +75,10 @@ interface CookieInterface {
      *
      * @param   string  $time
      *
-     * @return  \Comodojo\Cookies\CookieBase
+     * @return static
+     *   The invoked object.
+     *
+     * @throws CookieException
      */
     public function setExpire($time);
 
@@ -66,7 +87,10 @@ interface CookieInterface {
      *
      * @param   string  $location
      *
-     * @return  \Comodojo\Cookies\CookieBase
+     * @return static
+     *   The invoked object.
+     *
+     * @throws CookieException
      */
     public function setPath($location);
 
@@ -75,7 +99,10 @@ interface CookieInterface {
      *
      * @param   string  $domain
      *
-     * @return  \Comodojo\Cookies\CookieBase
+     * @return static
+     *   The invoked object.
+     *
+     * @throws CookieException
      */
     public function setDomain($domain);
 
@@ -84,14 +111,16 @@ interface CookieInterface {
      *
      * @param   bool  $mode
      *
-     * @return  \Comodojo\Cookies\CookieBase
+     * @return static
+     *   The invoked object.
      */
     public function setSecure($mode);
 
     /**
      * Set if cookie should be available only to HTTP protocol
      *
-     * @return  \Comodojo\Cookies\CookieBase
+     * @return static
+     *   The invoked object.
      */
     public function setHttponly($mode);
 
@@ -105,7 +134,8 @@ interface CookieInterface {
     /**
      * Get cookie
      *
-     * @return  \Comodojo\Cookies\CookieBase
+     * @return static
+     *   The invoked object.
      */
     public function load();
 
