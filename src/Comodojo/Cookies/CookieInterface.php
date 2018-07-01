@@ -20,6 +20,11 @@
 
 interface CookieInterface {
 
+    /*
+     * Cookie max size (the default one, change at your wish)
+     *
+     * @const int
+     */
     const COOKIE_MAX_SIZE = 4000;
 
     /**
@@ -28,7 +33,7 @@ interface CookieInterface {
      * @param string $name
      *   The cookie name.
      *
-     * @return static
+     * @return self
      *   The invoked object.
      *
      * @throws CookieException
@@ -52,7 +57,7 @@ interface CookieInterface {
      * @param bool $serialize
      *   If true, cookie will be serialized (default)
      *
-     * @return static
+     * @return self
      *   The invoked object.
      *
      * @throws CookieException
@@ -73,9 +78,9 @@ interface CookieInterface {
     /**
      * Set cookie's expiration time
      *
-     * @param   string  $time
+     * @param  integer  $time
      *
-     * @return static
+     * @return self
      *   The invoked object.
      *
      * @throws CookieException
@@ -87,7 +92,7 @@ interface CookieInterface {
      *
      * @param   string  $location
      *
-     * @return static
+     * @return self
      *   The invoked object.
      *
      * @throws CookieException
@@ -99,7 +104,7 @@ interface CookieInterface {
      *
      * @param   string  $domain
      *
-     * @return static
+     * @return self
      *   The invoked object.
      *
      * @throws CookieException
@@ -111,7 +116,7 @@ interface CookieInterface {
      *
      * @param   bool  $mode
      *
-     * @return static
+     * @return self
      *   The invoked object.
      */
     public function setSecure($mode);
@@ -119,7 +124,7 @@ interface CookieInterface {
     /**
      * Set if cookie should be available only to HTTP protocol
      *
-     * @return static
+     * @return self
      *   The invoked object.
      */
     public function setHttponly($mode);
@@ -134,7 +139,7 @@ interface CookieInterface {
     /**
      * Get cookie
      *
-     * @return static
+     * @return self
      *   The invoked object.
      */
     public function load();

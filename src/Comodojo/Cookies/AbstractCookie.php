@@ -27,35 +27,35 @@ abstract class AbstractCookie implements CookieInterface {
      *
      * @var string
      */
-    protected $name = null;
+    protected $name;
 
     /**
      * Cookie value (native string or serialized one)
      *
      * @var string
      */
-    protected $value = null;
+    protected $value;
 
     /**
      * Expiration time
      *
      * @var integer
      */
-    protected $expire = null;
+    protected $expire;
 
     /**
      * Path of cookie
      *
      * @var string
      */
-    protected $path = null;
+    protected $path;
 
     /**
      * Domain of cookie
      *
      * @var string
      */
-    protected $domain = null;
+    protected $domain;
 
     /**
      * Secure flag
@@ -78,7 +78,7 @@ abstract class AbstractCookie implements CookieInterface {
      *
      * @var int
      */
-    protected $max_cookie_size = 4000;
+    protected $max_cookie_size;
 
     /**
      * Default cookie's constructor
@@ -100,15 +100,11 @@ abstract class AbstractCookie implements CookieInterface {
 
         }
 
-        if ( is_int($max_cookie_size) ) {
-
-            $this->max_cookie_size = filter_var($max_cookie_size, FILTER_VALIDATE_INT, array(
-                'options' => array(
-                    'default' => 4000
-                )
-            ));
-
-        }
+        $this->max_cookie_size = filter_var($max_cookie_size, FILTER_VALIDATE_INT, [
+            'options' => [
+                'default' => CookieInterface::COOKIE_MAX_SIZE
+            ]
+        ]);
 
     }
 
@@ -175,7 +171,7 @@ abstract class AbstractCookie implements CookieInterface {
      */
     public function setDomain($domain) {
 
-        if ( !is_scalar($domain) || !self::checkDomain($domain) ) throw new CookieException("Invalid domain attribute");
+        if ( !is_scalar($domain) || !CookieTools::checkDomain($domain) ) throw new CookieException("Invalid domain attribute");
 
         $this->domain = $domain;
 
@@ -268,109 +264,29 @@ abstract class AbstractCookie implements CookieInterface {
     }
 
     /**
-     * Static method to delete a cookie quickly
+     * Static method to quickly delete a cookie
      *
-     * @param   string   $name  The cookie name
+     * @param string $name
+     *  The cookie name
      *
-     * @return  boolean
-     *
-     * @throws  \Comodojo\Exception\CookieException
+     * @return boolean
+     * @throws CookieException
      */
     public static function erase($name) {
 
         try {
 
-            $cookie = new Cookie($name);
+            $class = get_called_class();
 
-            $return = $cookie->delete();
+            $cookie = new $class($name);
+
+            return $cookie->delete();
 
         } catch (CookieException $ce) {
 
             throw $ce;
 
         }
-
-        return $return;
-
-    }
-
-    /**
-     * Set content of $cookie from array $properties
-     *
-     * @param   \Comodojo\Cookies\CookieInterface\CookieInterface   $cookie
-     *
-     * @param   array    $properties    Array of properties cookie should have
-     *
-     * @param   boolean  $serialize
-     *
-     * @return  \Comodojo\Cookies\CookieBase
-     */
-    protected static function cookieProperties(CookieInterface $cookie, $properties, $serialize) {
-
-        foreach ( $properties as $property => $value ) {
-
-            switch ( $property ) {
-
-                case 'value':
-
-                    $cookie->setValue($value, $serialize);
-
-                    break;
-
-                case 'expire':
-
-                    $cookie->setExpire($value);
-
-                    break;
-
-                case 'path':
-
-                    $cookie->setPath($value);
-
-                    break;
-
-                case 'domain':
-
-                    $cookie->setDomain($value);
-
-                    break;
-
-                case 'secure':
-
-                    $cookie->setSecure($value);
-
-                    break;
-
-                case 'httponly':
-
-                    $cookie->setHttponly($value);
-
-                    break;
-
-            }
-
-        }
-
-        return $cookie;
-
-    }
-
-    /**
-     * Check if domain is valid
-     *
-     * Main code from: http://stackoverflow.com/questions/1755144/how-to-validate-domain-name-in-php
-     *
-     * @param   string   $domain_name  The domain name to check
-     *
-     * @return  bool
-     */
-    protected static function checkDomain($domain_name) {
-
-        if ( $domain_name[0] == '.' ) $domain_name = substr($domain_name, 1);
-
-        return (preg_match("/^([a-z\d](-*[a-z\d])*)(\.([a-z\d](-*[a-z\d])*))*$/i", $domain_name) //valid chars check
-                && preg_match("/^.{1,253}$/", $domain_name) //overall length check
-                && preg_match("/^[^\.]{1,63}(\.[^\.]{1,63})*$/", $domain_name)); //length of each label
 
     }
 

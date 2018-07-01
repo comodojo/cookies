@@ -23,14 +23,7 @@ use \Comodojo\Exception\CookieException;
 class Cookie extends AbstractCookie {
 
     /**
-     * Set cookie content
-     *
-     * @param   mixed   $value      Cookie content
-     * @param   bool    $serialize  If true (default) cookie will be serialized first
-     *
-     * @return  \Comodojo\Cookies\Cookie
-     *
-     * @throws  \Comodojo\Exception\CookieException
+     * {@inheritdoc}
      */
     public function setValue($value, $serialize = true) {
 
@@ -47,11 +40,7 @@ class Cookie extends AbstractCookie {
     }
 
     /**
-     * Get cookie content
-     *
-     * @param   bool    $unserialize    If true (default) cookie will be unserialized first
-     *
-     * @return  mixed
+     * {@inheritdoc}
      */
     public function getValue($unserialize = true) {
 
@@ -60,17 +49,18 @@ class Cookie extends AbstractCookie {
     }
 
     /**
-     * Static method to create a cookie quickly
+     * Static method to quickly create a cookie
      *
-     * @param   string   $name  The cookie name
+     * @param string $name
+     *  The cookie name
      *
-     * @param   array    $properties    Array of properties cookie should have
+     * @param array $properties
+     *  Array of properties cookie should have
      *
-     * @return  \Comodojo\Cookies\Cookie
-     *
-     * @throws  \Comodojo\Exception\CookieException
+     * @return self
+     * @throws CookieException
      */
-    public static function create($name, $properties = [], $serialize = true) {
+    public static function create($name, array $properties = [], $serialize = true) {
 
         try {
 
@@ -78,7 +68,7 @@ class Cookie extends AbstractCookie {
 
             $cookie = new $class($name);
 
-            self::cookieProperties($cookie, $properties, $serialize);
+            CookieTools::setCookieProperties($cookie, $properties, $serialize);
 
         } catch (CookieException $ce) {
 
@@ -91,13 +81,13 @@ class Cookie extends AbstractCookie {
     }
 
     /**
-     * Static method to get a cookie quickly
+     * Static method to quickly get a cookie
      *
-     * @param   string   $name  The cookie name
+     * @param string $name
+     *  The cookie name
      *
-     * @return  \Comodojo\Cookies\Cookie
-     *
-     * @throws  \Comodojo\Exception\CookieException
+     * @return self
+     * @throws CookieException
      */
     public static function retrieve($name) {
 
@@ -107,15 +97,13 @@ class Cookie extends AbstractCookie {
 
             $cookie = new $class($name);
 
-            $return = $cookie->load();
+            return $cookie->load();
 
         } catch (CookieException $ce) {
 
             throw $ce;
 
         }
-
-        return $return;
 
     }
 

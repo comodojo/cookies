@@ -27,14 +27,14 @@ class CookieManager {
      *
      * @var array
      */
-    private $cookies = array();
+    private $cookies = [];
 
     /**
      * Add a cookie to the stack
      *
      * @param CookieInterface $cookie
      *
-     * @return static
+     * @return CookieManager
      */
     public function add(CookieInterface $cookie) {
 
@@ -47,6 +47,12 @@ class CookieManager {
     /**
      * @deprecated 2.1.0
      * @see CookieManager::add()
+     *
+     * Add a cookie to the stack
+     *
+     * @param CookieInterface $cookie
+     *
+     * @return CookieManager
      */
     public function register(CookieInterface $cookie) {
         return $this->add($cookie);
@@ -57,7 +63,8 @@ class CookieManager {
      *
      * @param CookieInterface|string $cookie
      *
-     * @return static
+     * @return CookieManager
+     * @throws CookieException
      */
     public function del($cookie) {
 
@@ -65,9 +72,11 @@ class CookieManager {
 
         $name = ($cookie instanceof CookieInterface) ? $cookie->getName() : $cookie;
 
-        if ( $this->isRegistered($name) ) unset($this->cookies[$name]);
-
-        else throw new CookieException("Cookie is not registered");
+        if ( $this->isRegistered($name) ) {
+            unset($this->cookies[$name]);
+        } else {
+            throw new CookieException("Cookie is not registered");
+        }
 
         return $this;
 
@@ -76,17 +85,25 @@ class CookieManager {
     /**
      * @deprecated 2.1.0
      * @see CookieManager::del()
+     *
+     * Delete a cookie from the stack
+     *
+     * @param CookieInterface|string $cookie
+     *
+     * @return CookieManager
+     * @throws CookieException
      */
     public function unregister($cookie) {
         return $this->del($cookie);
     }
 
     /**
-     * Check if cookie is into the stack
+     * Check if a cookie is into the stack
      *
      * @param CookieInterface|string $cookie
      *
-     * @return static
+     * @return CookieManager
+     * @throws CookieException
      */
     public function has($cookie) {
 
@@ -101,6 +118,13 @@ class CookieManager {
     /**
      * @deprecated 2.1.0
      * @see CookieManager::has()
+     *
+     * Check if a cookie is into the stack
+     *
+     * @param CookieInterface|string $cookie
+     *
+     * @return CookieManager
+     * @throws CookieException
      */
     public function isRegistered($cookie) {
         return $this->has($cookie);
@@ -112,12 +136,15 @@ class CookieManager {
      * @param string $cookie_name
      *
      * @return CookieInterface
+     * @throws CookieException
      */
     public function get($cookie_name) {
 
-        if ( $this->isRegistered($cookie_name) ) return $this->cookies[$cookie_name];
+        if ( $this->isRegistered($cookie_name) ) {
+            return $this->cookies[$cookie_name];
+        }
 
-        else throw new CookieException("Cookie is not registered");
+        throw new CookieException("Cookie is not registered");
 
     }
 
@@ -135,15 +162,16 @@ class CookieManager {
     /**
      * Get values from all registered cookies and dump as an associative array
      *
-     * @return  array
+     * @return array
+     * @throws CookieException
      */
     public function getValues() {
 
-        $cookies = array();
+        $cookies = [];
 
         try {
 
-            foreach ( $this->cookies as $name=>$cookie ) {
+            foreach ( $this->cookies as $name => $cookie ) {
 
                 $cookies[$name] = $cookie->getValue();
 
@@ -162,7 +190,8 @@ class CookieManager {
     /**
      * Save all registered cookies
      *
-     * @return static
+     * @return CookieManager
+     * @throws CookieException
      */
     public function save() {
 
@@ -187,7 +216,8 @@ class CookieManager {
     /**
      * Load all registered cookies
      *
-     * @return static
+     * @return CookieManager
+     * @throws CookieException
      */
     public function load() {
 

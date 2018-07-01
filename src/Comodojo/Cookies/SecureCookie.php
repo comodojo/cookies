@@ -1,7 +1,7 @@
 <?php namespace Comodojo\Cookies;
 
 /**
- * AES-encrypted cookie
+ * AES-encrypted cookie using client-specific key
  *
  * @package     Comodojo Spare Parts
  * @author      Marco Giovinazzi <marco.giovinazzi@comodojo.org>
@@ -25,9 +25,9 @@ class SecureCookie extends EncryptedCookie {
      * the client remote address and (in case) the value of
      * HTTP_X_FORWARDED_FOR header
      *
-     * @param   string   $key
+     * @param string $key
      *
-     * @return  string
+     * @return string
      */
     protected static function encryptKey($key) {
 

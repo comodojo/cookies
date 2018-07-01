@@ -35,11 +35,11 @@ class EncryptedCookie extends AbstractCookie {
      *
      * Setup cookie name and key
      *
-     * @param   string   $name
+     * @param string $name
+     * @param string $key
+     * @param int $max_cookie_size
      *
-     * @param   string   $key
-     *
-     * @throws \Comodojo\Exception\CookieException
+     * @throws CookieException
      */
     public function __construct($name, $key, $max_cookie_size = null) {
 
@@ -50,14 +50,7 @@ class EncryptedCookie extends AbstractCookie {
     }
 
     /**
-     * Set cookie content
-     *
-     * @param   mixed   $value      Cookie content
-     * @param   bool    $serialize  If true (default) cookie will be serialized first
-     *
-     * @return  \Comodojo\Cookies\EncryptedCookie
-     *
-     * @throws  \Comodojo\Exception\CookieException
+     * {@inheritdoc}
      */
     public function setValue($value, $serialize = true) {
 
@@ -84,11 +77,7 @@ class EncryptedCookie extends AbstractCookie {
     }
 
     /**
-     * Get cookie content
-     *
-     * @param   bool    $unserialize    If true (default) cookie will be unserialized first
-     *
-     * @return  mixed
+     * {@inheritdoc}
      */
     public function getValue($unserialize = true) {
 
@@ -113,19 +102,20 @@ class EncryptedCookie extends AbstractCookie {
     }
 
     /**
-     * Static method to create a cookie quickly
+     * Static method to quickly create a cookie
      *
-     * @param   string   $name  The cookie name
+     * @param string $name
+     *  The cookie name
      *
-     * @param   string   $key
+     * @param string $key
      *
-     * @param   array    $properties    Array of properties cookie should have
+     * @param array $properties
+     *  Array of properties cookie should have
      *
-     * @return  \Comodojo\Cookies\EncryptedCookie
-     *
-     * @throws  \Comodojo\Exception\CookieException
+     * @return  EncryptedCookie
+     * @throws  CookieException
      */
-    public static function create($name, $key, $properties = [], $serialize = true) {
+    public static function create($name, $key, array $properties = [], $serialize = true) {
 
         try {
 
@@ -133,7 +123,7 @@ class EncryptedCookie extends AbstractCookie {
 
             $cookie = new $class($name, $key);
 
-            self::cookieProperties($cookie, $properties, $serialize);
+            CookieTools::setCookieProperties($cookie, $properties, $serialize);
 
         } catch (CookieException $ce) {
 
@@ -146,15 +136,15 @@ class EncryptedCookie extends AbstractCookie {
     }
 
     /**
-     * Static method to get a cookie quickly
+     * Static method to quickly get a cookie
      *
-     * @param   string   $name  The cookie name
+     * @param string $name
+     *  The cookie name
      *
-     * @param   string   $key
+     * @param string $key
      *
-     * @return  \Comodojo\Cookies\EncryptedCookie
-     *
-     * @throws  \Comodojo\Exception\CookieException
+     * @return EncryptedCookie
+     * @throws CookieException
      */
     public static function retrieve($name, $key) {
 
@@ -179,9 +169,9 @@ class EncryptedCookie extends AbstractCookie {
     /**
      * Hash the key to generate a valid aes key value
      *
-     * @param   string   $key
+     * @param string $key
      *
-     * @return  string
+     * @return string
      */
     protected static function encryptKey($key) {
 
