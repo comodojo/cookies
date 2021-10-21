@@ -1,6 +1,7 @@
 <?php
+use PHPUnit\Framework\TestCase;
 
-class SecureCookieTest extends \PHPUnit_Framework_TestCase {
+class SecureCookieTest extends TestCase {
 
     public function testCookieSave() {
 
