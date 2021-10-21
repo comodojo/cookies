@@ -1,16 +1,17 @@
 <?php
+use PHPUnit\Framework\TestCase;
 
-class CookieBaseTest extends \PHPUnit_Framework_TestCase {
+class CookieBaseTest extends TestCase {
 
 	protected $cookie_name = 'basecookietest';
 
-	protected function setUp() {
+    protected function setUp() :void {
         
         $this->cookie = new \Comodojo\Cookies\Cookie($this->cookie_name);
     
     }
 
-    protected function tearDown() {
+    protected function tearDown() :void{
 
         unset($this->cookie);
 
