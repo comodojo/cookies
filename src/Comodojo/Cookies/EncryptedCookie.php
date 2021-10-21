@@ -1,6 +1,6 @@
 <?php namespace Comodojo\Cookies;
 
-use \phpseclib\Crypt\AES;
+use phpseclib3\Crypt\AES;
 use \Comodojo\Exception\CookieException;
 
 /**
@@ -58,11 +58,9 @@ class EncryptedCookie extends AbstractCookie {
 
         if ( $serialize === true ) $value = serialize($value);
 
-        $cipher = new AES(AES::MODE_ECB);
+        $cipher = new AES('ecb');
 
-        $cipher->setKeyLength(256);
-
-        $cipher->setKey(self::encryptKey($this->key));
+        $cipher->setKey($this->key);
 
         // added base64 encoding to avoid problems with binary data
 
@@ -81,11 +79,9 @@ class EncryptedCookie extends AbstractCookie {
      */
     public function getValue($unserialize = true) {
 
-        $cipher = new AES(AES::MODE_ECB);
+        $cipher = new AES('ecb');
 
-        $cipher->setKeyLength(256);
-
-        $cipher->setKey(self::encryptKey($this->key));
+        $cipher->setKey($this->key);
 
         // added base64 encoding to avoid problems with binary data
 
@@ -166,17 +162,5 @@ class EncryptedCookie extends AbstractCookie {
 
     }
 
-    /**
-     * Hash the key to generate a valid aes key value
-     *
-     * @param string $key
-     *
-     * @return string
-     */
-    protected static function encryptKey($key) {
-
-        return hash('sha256', $key);
-
-    }
 
 }
