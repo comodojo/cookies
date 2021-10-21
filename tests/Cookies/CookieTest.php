@@ -151,7 +151,7 @@ class CookieTest extends TestCase {
 
     }
 
-    public static function tearDownAfterClass() {
+    public static function tearDownAfterClass() :void{
 
         unlink(__DIR__."/../tmp/COOKIE_TMP");
 
