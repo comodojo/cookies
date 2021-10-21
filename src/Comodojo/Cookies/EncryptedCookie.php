@@ -25,6 +25,7 @@ class EncryptedCookie extends AbstractCookie {
 
     /*
      * AES key
+     * Only keys of sizes 16, 24 or 32 supported
      *
      * @var int
      */
