@@ -78,7 +78,8 @@ class CookieBaseTest extends TestCase {
      */
     public function testLoad() {
 
-		$result = $this->cookie->load();
+	    $this->expectExceptionMessageMatches('/^Cookie does not exists$/');  
+	    $result = $this->cookie->load();
 
 	}
 
