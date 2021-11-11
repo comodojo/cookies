@@ -1,5 +1,5 @@
 {
-    "name": "pmarcelli/cookies",
+    "name": "comodojo/cookies",
     "description": "Minimalist and extensible library to manage cookies",
     "license": "MIT",
     "type": "library",
@@ -28,7 +28,7 @@
     "require": {
         "php": ">=5.4",
         "phpseclib/phpseclib": "^3.0",
-        "pmarcelli/exceptions": "dev-exceptions_u7320"
+        "comodojo/exceptions": "dev-master"
     },
     "require-dev": {
         "phpunit/phpunit": "^9.5",
