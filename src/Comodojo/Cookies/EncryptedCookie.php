@@ -46,7 +46,7 @@ class EncryptedCookie extends AbstractCookie
      */
     public function __construct(string $name, string $key, int $max_cookie_size = null)
     {
-        if (empty($key) or empty($key)) {
+        if (empty($key)) {
             throw new CookieException("Invalid secret key");
         }
         $this->cipher = self::setupCipher($key);
