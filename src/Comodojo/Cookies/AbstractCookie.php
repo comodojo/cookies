@@ -1,4 +1,6 @@
-<?php namespace Comodojo\Cookies;
+<?php
+
+namespace Comodojo\Cookies;
 
 use \Comodojo\Exception\CookieException;
 
@@ -20,56 +22,57 @@ use \Comodojo\Exception\CookieException;
  * THE SOFTWARE.
  */
 
-abstract class AbstractCookie implements CookieInterface {
+abstract class AbstractCookie implements CookieInterface
+{
 
     /**
      * The cookie name
      *
      * @var string
      */
-    protected $name;
+    protected string $name = '';
 
     /**
      * Cookie value (native string or serialized one)
      *
      * @var string
      */
-    protected $value;
+    protected string $value = '';
 
     /**
      * Expiration time
      *
      * @var integer
      */
-    protected $expire;
+    protected int $expire = 0;
 
     /**
      * Path of cookie
      *
      * @var string
      */
-    protected $path;
+    protected string $path = '';
 
     /**
      * Domain of cookie
      *
      * @var string
      */
-    protected $domain;
+    protected string $domain = '';
 
     /**
      * Secure flag
      *
      * @var bool
      */
-    protected $secure = false;
+    protected bool $secure = false;
 
     /**
      * Httponly flag
      *
      * @var bool
      */
-    protected $httponly = false;
+    protected bool $httponly = false;
 
     /*
      * Max cookie size
@@ -78,7 +81,7 @@ abstract class AbstractCookie implements CookieInterface {
      *
      * @var int
      */
-    protected $max_cookie_size;
+    protected int $max_cookie_size;
 
     /**
      * Default cookie's constructor
@@ -88,125 +91,102 @@ abstract class AbstractCookie implements CookieInterface {
      *
      * @throws CookieException
      */
-    public function __construct($name, $max_cookie_size = null) {
-
-        try {
-
-            $this->setName($name);
-
-        } catch (CookieException $ce) {
-
-            throw $ce;
-
-        }
-
+    public function __construct(string $name, int $max_cookie_size = null)
+    {
+        $this->setName($name);
         $this->max_cookie_size = filter_var($max_cookie_size, FILTER_VALIDATE_INT, [
             'options' => [
                 'default' => CookieInterface::COOKIE_MAX_SIZE
             ]
         ]);
-
     }
 
     /**
      * {@inheritdoc}
      */
-    public function setName($name) {
-
-        if ( empty($name) || !is_scalar($name) ) throw new CookieException("Invalid cookie name");
+    public function setName(string $name): CookieInterface
+    {
+        if (empty($name)) {
+            throw new CookieException("Invalid cookie name");
+        }
 
         $this->name = $name;
-
         return $this;
-
     }
 
     /**
      * {@inheritdoc}
      */
-    public function getName() {
-
+    public function getName(): string
+    {
         return $this->name;
-
     }
 
     /**
      * {@inheritdoc}
      */
-    abstract function setValue($value, $serialize);
+    abstract function setValue($value, bool $serialize = true): CookieInterface;
 
     /**
      * {@inheritdoc}
      */
-    abstract function getValue($unserialize);
+    abstract function getValue(bool $unserialize = true);
 
     /**
      * {@inheritdoc}
      */
-    public function setExpire($timestamp) {
-
-        if ( !is_int($timestamp) ) throw new CookieException("Invalud cookie's expiration time");
-
+    public function setExpire(int $timestamp): CookieInterface
+    {
         $this->expire = $timestamp;
-
         return $this;
-
     }
 
     /**
      * {@inheritdoc}
      */
-    public function setPath($location) {
-
-        if ( !is_string($location) ) throw new CookieException("Invalid path attribute");
-
+    public function setPath(string $location): CookieInterface
+    {
         $this->path = $location;
-
         return $this;
-
     }
 
     /**
      * {@inheritdoc}
      */
-    public function setDomain($domain) {
-
-        if ( !is_scalar($domain) || !CookieTools::checkDomain($domain) ) throw new CookieException("Invalid domain attribute");
+    public function setDomain(string $domain): CookieInterface
+    {
+        if (!CookieTools::checkDomain($domain)) {
+            throw new CookieException("Invalid cookie domain");
+        }
 
         $this->domain = $domain;
-
         return $this;
-
     }
 
     /**
      * {@inheritdoc}
      */
-    public function setSecure($mode = true) {
-
-        $this->secure = filter_var($mode, FILTER_VALIDATE_BOOLEAN);
-
+    public function setSecure(bool $mode = true): CookieInterface
+    {
+        $this->secure = $mode;
         return $this;
-
     }
 
     /**
      * {@inheritdoc}
      */
-    public function setHttponly($mode = true) {
-
-        $this->httponly = filter_var($mode, FILTER_VALIDATE_BOOLEAN);
-
+    public function setHttponly(bool $mode = true): CookieInterface
+    {
+        $this->httponly = $mode;
         return $this;
-
     }
 
     /**
      * {@inheritdoc}
      */
-    public function save() {
-
-        if ( setcookie(
+    public function save(): bool
+    {
+        if (setcookie(
             $this->name,
             $this->value,
             $this->expire,
@@ -214,33 +194,33 @@ abstract class AbstractCookie implements CookieInterface {
             $this->domain,
             $this->secure,
             $this->httponly
-        ) === false ) throw new CookieException("Cannot set cookie: ".$this->name);
-
+        ) === false) {
+            throw new CookieException("Cannot set cookie: " . $this->name);
+        }
         return true;
-
     }
 
     /**
      * {@inheritdoc}
      */
-    public function load() {
-
-        if ( !$this->exists() ) throw new CookieException("Cookie does not exists");
-
+    public function load(): CookieInterface
+    {
+        if (!$this->exists()) {
+            throw new CookieException("Cookie ".$this->name." does not exists");
+        }
         $this->value = $_COOKIE[$this->name];
-
         return $this;
-
     }
 
     /**
      * {@inheritdoc}
      */
-    public function delete() {
-
-        if ( !$this->exists() ) return true;
-
-        if ( setcookie(
+    public function delete(): bool
+    {
+        if (!$this->exists()) {
+            return true;
+        }
+        if (setcookie(
             $this->name,
             null,
             time() - 86400,
@@ -248,46 +228,27 @@ abstract class AbstractCookie implements CookieInterface {
             null,
             $this->secure,
             $this->httponly
-        ) === false ) throw new CookieException("Cannot delete cookie");
-
+        ) === false) {
+            throw new CookieException("Cannot delete cookie");
+        }
         return true;
-
     }
 
     /**
      * {@inheritdoc}
      */
-    public function exists() {
-
+    public function exists(): bool
+    {
         return isset($_COOKIE[$this->name]);
-
     }
 
     /**
-     * Static method to quickly delete a cookie
-     *
-     * @param string $name
-     *  The cookie name
-     *
-     * @return boolean
-     * @throws CookieException
+     * {@inheritdoc}
      */
-    public static function erase($name) {
-
-        try {
-
-            $class = get_called_class();
-
-            $cookie = new $class($name);
-
-            return $cookie->delete();
-
-        } catch (CookieException $ce) {
-
-            throw $ce;
-
-        }
-
+    public static function erase(string $name): bool
+    {
+        $class = get_called_class();
+        $cookie = new $class($name);
+        return $cookie->delete();
     }
-
 }

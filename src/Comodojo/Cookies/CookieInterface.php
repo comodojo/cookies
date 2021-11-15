@@ -1,4 +1,6 @@
-<?php namespace Comodojo\Cookies;
+<?php
+
+namespace Comodojo\Cookies;
 
 /**
  * Object cookie interface
@@ -18,14 +20,15 @@
  * THE SOFTWARE.
  */
 
-interface CookieInterface {
+interface CookieInterface
+{
 
     /*
      * Cookie max size (the default one, change at your wish)
      *
      * @const int
      */
-    const COOKIE_MAX_SIZE = 4000;
+    public const COOKIE_MAX_SIZE = 4000;
 
     /**
      * Set cookie name
@@ -38,7 +41,7 @@ interface CookieInterface {
      *
      * @throws CookieException
      */
-    public function setName($name);
+    public function setName(string $name): CookieInterface;
 
     /**
      * Get cookie name
@@ -46,12 +49,12 @@ interface CookieInterface {
      * @return string
      *   Name of cookie
      */
-    public function getName();
+    public function getName(): string;
 
     /**
      * Set value of cookie
      *
-     * @param string $value
+     * @param mixed $value
      *   The value of cookie.
      *
      * @param bool $serialize
@@ -62,7 +65,7 @@ interface CookieInterface {
      *
      * @throws CookieException
      */
-    public function setValue($value, $serialize);
+    public function setValue($value, bool $serialize = true): CookieInterface;
 
     /**
      * Get cookie value
@@ -70,10 +73,10 @@ interface CookieInterface {
      * @param bool $unserialize
      *   If true, cookie will be unserialized (default)
      *
-     * @return string
+     * @return mixed
      *   Value of cookie
      */
-    public function getValue($unserialize);
+    public function getValue(bool $unserialize = true);
 
     /**
      * Set cookie's expiration time
@@ -85,7 +88,7 @@ interface CookieInterface {
      *
      * @throws CookieException
      */
-    public function setExpire($time);
+    public function setExpire(int $time): CookieInterface;
 
     /**
      * Set cookie's path
@@ -97,7 +100,7 @@ interface CookieInterface {
      *
      * @throws CookieException
      */
-    public function setPath($location);
+    public function setPath(string $location): CookieInterface;
 
     /**
      * Set cookie's domain
@@ -109,7 +112,7 @@ interface CookieInterface {
      *
      * @throws CookieException
      */
-    public function setDomain($domain);
+    public function setDomain(string $domain): CookieInterface;
 
     /**
      * Set if the cookie should be transmitted only via https
@@ -119,7 +122,7 @@ interface CookieInterface {
      * @return self
      *   The invoked object.
      */
-    public function setSecure($mode);
+    public function setSecure(bool $mode): CookieInterface;
 
     /**
      * Set if cookie should be available only to HTTP protocol
@@ -127,14 +130,14 @@ interface CookieInterface {
      * @return self
      *   The invoked object.
      */
-    public function setHttponly($mode);
+    public function setHttponly(bool $mode): CookieInterface;
 
     /**
      * Set cookie
      *
      * @return  boolean
      */
-    public function save();
+    public function save(): bool;
 
     /**
      * Get cookie
@@ -142,20 +145,30 @@ interface CookieInterface {
      * @return self
      *   The invoked object.
      */
-    public function load();
+    public function load(): CookieInterface;
 
     /**
      * Delete cookie
      *
      * @return  bool
      */
-    public function delete();
+    public function delete(): bool;
 
     /**
      * Check if cookie exists
      *
      * @return  bool
      */
-    public function exists();
+    public function exists(): bool;
 
+    /**
+     * Static method to quickly delete a cookie
+     *
+     * @param string $name
+     *  The cookie name
+     *
+     * @return boolean
+     * @throws CookieException
+     */
+    public static function erase(string $name): bool;
 }

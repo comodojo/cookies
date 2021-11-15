@@ -1,4 +1,6 @@
-<?php namespace Comodojo\Cookies;
+<?php
+
+namespace Comodojo\Cookies;
 
 use \Comodojo\Exception\CookieException;
 
@@ -20,32 +22,34 @@ use \Comodojo\Exception\CookieException;
  * THE SOFTWARE.
  */
 
-class Cookie extends AbstractCookie {
+class Cookie extends AbstractCookie
+{
 
     /**
      * {@inheritdoc}
      */
-    public function setValue($value, $serialize = true) {
-
-        if ( !is_scalar($value) && $serialize === false ) throw new CookieException("Cannot set non-scalar value without serialization");
+    public function setValue($value, bool $serialize = true): CookieInterface
+    {
+        if (!is_scalar($value) && $serialize === false) {
+            throw new CookieException("Cannot set non-scalar value without serialization");
+        }
 
         $cookie_value = $serialize === true ? serialize($value) : $value;
 
-        if ( strlen($cookie_value) > $this->max_cookie_size ) throw new CookieException("Cookie size larger than ".$this->max_cookie_size." bytes");
-
+        if (strlen($cookie_value) > $this->max_cookie_size) {
+            throw new CookieException("Cookie size larger than " . $this->max_cookie_size . " bytes");
+        }
+        
         $this->value = $cookie_value;
-
         return $this;
-
     }
 
     /**
      * {@inheritdoc}
      */
-    public function getValue($unserialize = true) {
-
+    public function getValue(bool $unserialize = true)
+    {
         return $unserialize ? unserialize($this->value) : $this->value;
-
     }
 
     /**
@@ -60,24 +64,12 @@ class Cookie extends AbstractCookie {
      * @return self
      * @throws CookieException
      */
-    public static function create($name, array $properties = [], $serialize = true) {
-
-        try {
-
-            $class = get_called_class();
-
-            $cookie = new $class($name);
-
-            CookieTools::setCookieProperties($cookie, $properties, $serialize);
-
-        } catch (CookieException $ce) {
-
-            throw $ce;
-
-        }
-
+    public static function create(string $name, array $properties = [], bool $serialize = true): CookieInterface
+    {
+        $class = get_called_class();
+        $cookie = new $class($name);
+        CookieTools::setCookieProperties($cookie, $properties, $serialize);
         return $cookie;
-
     }
 
     /**
@@ -89,22 +81,10 @@ class Cookie extends AbstractCookie {
      * @return self
      * @throws CookieException
      */
-    public static function retrieve($name) {
-
-        try {
-
-            $class = get_called_class();
-
-            $cookie = new $class($name);
-
-            return $cookie->load();
-
-        } catch (CookieException $ce) {
-
-            throw $ce;
-
-        }
-
+    public static function retrieve($name)
+    {
+        $class = get_called_class();
+        $cookie = new $class($name);
+        return $cookie->load();
     }
-
 }

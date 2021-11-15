@@ -1,4 +1,6 @@
-<?php namespace Comodojo\Cookies;
+<?php
+
+namespace Comodojo\Cookies;
 
 use \Comodojo\Exception\CookieException;
 
@@ -20,14 +22,15 @@ use \Comodojo\Exception\CookieException;
  * THE SOFTWARE.
  */
 
-class CookieManager {
+class CookieManager
+{
 
     /*
      * Cookie storage :)
      *
      * @var array
      */
-    private $cookies = [];
+    private array $cookies = [];
 
     /**
      * Add a cookie to the stack
@@ -36,26 +39,10 @@ class CookieManager {
      *
      * @return CookieManager
      */
-    public function add(CookieInterface $cookie) {
-
+    public function add(CookieInterface $cookie): CookieManager
+    {
         $this->cookies[$cookie->getName()] = $cookie;
-
         return $this;
-
-    }
-
-    /**
-     * @deprecated 2.1.0
-     * @see CookieManager::add()
-     *
-     * Add a cookie to the stack
-     *
-     * @param CookieInterface $cookie
-     *
-     * @return CookieManager
-     */
-    public function register(CookieInterface $cookie) {
-        return $this->add($cookie);
     }
 
     /**
@@ -66,35 +53,20 @@ class CookieManager {
      * @return CookieManager
      * @throws CookieException
      */
-    public function del($cookie) {
-
-        if ( empty($cookie) ) throw new CookieException("Invalid cookie object or name");
-
+    public function delete($cookie): CookieManager
+    {
         $name = ($cookie instanceof CookieInterface) ? $cookie->getName() : $cookie;
+        if (empty($name)) {
+            throw new CookieException("Invalid cookie object or name");
+        }
 
-        if ( $this->isRegistered($name) ) {
+        if ($this->has($name)) {
             unset($this->cookies[$name]);
         } else {
             throw new CookieException("Cookie is not registered");
         }
 
         return $this;
-
-    }
-
-    /**
-     * @deprecated 2.1.0
-     * @see CookieManager::del()
-     *
-     * Delete a cookie from the stack
-     *
-     * @param CookieInterface|string $cookie
-     *
-     * @return CookieManager
-     * @throws CookieException
-     */
-    public function unregister($cookie) {
-        return $this->del($cookie);
     }
 
     /**
@@ -105,29 +77,14 @@ class CookieManager {
      * @return CookieManager
      * @throws CookieException
      */
-    public function has($cookie) {
-
-        if ( empty($cookie) ) throw new CookieException("Invalid cookie object or name");
-
+    public function has($cookie)
+    {
         $name = ($cookie instanceof CookieInterface) ? $cookie->getName() : $cookie;
+        if (empty($name)) {
+            throw new CookieException("Invalid cookie object or name");
+        }
 
         return array_key_exists($name, $this->cookies);
-
-    }
-
-    /**
-     * @deprecated 2.1.0
-     * @see CookieManager::has()
-     *
-     * Check if a cookie is into the stack
-     *
-     * @param CookieInterface|string $cookie
-     *
-     * @return CookieManager
-     * @throws CookieException
-     */
-    public function isRegistered($cookie) {
-        return $this->has($cookie);
     }
 
     /**
@@ -138,14 +95,12 @@ class CookieManager {
      * @return CookieInterface
      * @throws CookieException
      */
-    public function get($cookie_name) {
-
-        if ( $this->isRegistered($cookie_name) ) {
+    public function get(string $cookie_name): CookieInterface
+    {
+        if ($this->has($cookie_name)) {
             return $this->cookies[$cookie_name];
         }
-
         throw new CookieException("Cookie is not registered");
-
     }
 
     /**
@@ -153,10 +108,9 @@ class CookieManager {
      *
      * @return array
      */
-    public function getAll() {
-
+    public function getAll(): array
+    {
         return $this->cookies;
-
     }
 
     /**
@@ -165,52 +119,23 @@ class CookieManager {
      * @return array
      * @throws CookieException
      */
-    public function getValues() {
-
-        $cookies = [];
-
-        try {
-
-            foreach ( $this->cookies as $name => $cookie ) {
-
-                $cookies[$name] = $cookie->getValue();
-
-            }
-
-        } catch (CookieException $ce) {
-
-            throw $ce;
-
-        }
-
-        return $cookies;
-
+    public function getValues(): array
+    {
+        return array_map(fn(CookieInterface $cookie) => $cookie->getValue(), $this->cookies);
     }
 
     /**
      * Save all registered cookies
      *
-     * @return CookieManager
+     * @return bool
      * @throws CookieException
      */
-    public function save() {
-
-        try {
-
-            foreach ( $this->cookies as $c ) {
-
-                $c->save();
-
-            }
-
-        } catch (CookieException $ce) {
-
-            throw $ce;
-
+    public function save(): bool
+    {
+        foreach ($this->cookies as $c) {
+            $c->save();
         }
-
         return true;
-
     }
 
     /**
@@ -219,24 +144,11 @@ class CookieManager {
      * @return CookieManager
      * @throws CookieException
      */
-    public function load() {
-
-        try {
-
-            foreach ( $this->cookies as $c ) {
-
-                $c->load();
-
-            }
-
-        } catch (CookieException $ce) {
-
-            throw $ce;
-
+    public function load(): CookieManager
+    { 
+        foreach ($this->cookies as $c) {
+            $c->load();
         }
-
         return $this;
-
     }
-
 }

@@ -1,4 +1,6 @@
-<?php namespace Comodojo\Cookies;
+<?php
+
+namespace Comodojo\Cookies;
 
 use \Exception;
 
@@ -20,7 +22,8 @@ use \Exception;
  * THE SOFTWARE.
  */
 
-class CookieTools {
+class CookieTools
+{
 
     /**
      * Set content of $cookie from array $properties
@@ -43,60 +46,36 @@ class CookieTools {
      * @return CookieInterface
      * @throws Exception
      */
-    public static function setCookieProperties(CookieInterface $cookie, array $properties, $serialize) {
+    public static function setCookieProperties(CookieInterface $cookie, array $properties, bool $serialize)
+    {
+        foreach ($properties as $property => $value) {
+            switch ($property) {
+                case 'value':
+                    $cookie->setValue($value, $serialize);
+                    break;
 
-        try {
+                case 'expire':
+                    $cookie->setExpire($value);
+                    break;
 
-            foreach ( $properties as $property => $value ) {
+                case 'path':
+                    $cookie->setPath($value);
+                    break;
 
-                switch ( $property ) {
+                case 'domain':
+                    $cookie->setDomain($value);
+                    break;
 
-                    case 'value':
+                case 'secure':
+                    $cookie->setSecure($value);
+                    break;
 
-                        $cookie->setValue($value, $serialize);
-
-                        break;
-
-                    case 'expire':
-
-                        $cookie->setExpire($value);
-
-                        break;
-
-                    case 'path':
-
-                        $cookie->setPath($value);
-
-                        break;
-
-                    case 'domain':
-
-                        $cookie->setDomain($value);
-
-                        break;
-
-                    case 'secure':
-
-                        $cookie->setSecure($value);
-
-                        break;
-
-                    case 'httponly':
-
-                        $cookie->setHttponly($value);
-
-                        break;
-
-                }
-
+                case 'httponly':
+                    $cookie->setHttponly($value);
+                    break;
             }
-
-        } catch (Exception $e) {
-            throw $e;
         }
-
         return $cookie;
-
     }
 
     /**
@@ -109,14 +88,13 @@ class CookieTools {
      *
      * @return  bool
      */
-    public static function checkDomain($domain_name) {
-
-        if ( $domain_name[0] == '.' ) $domain_name = substr($domain_name, 1);
-
+    public static function checkDomain(string $domain_name): bool
+    {
+        if ($domain_name[0] == '.') {
+            $domain_name = substr($domain_name, 1);
+        }
         return (preg_match("/^([a-z\d](-*[a-z\d])*)(\.([a-z\d](-*[a-z\d])*))*$/i", $domain_name) //valid chars check
-                && preg_match("/^.{1,253}$/", $domain_name) //overall length check
-                && preg_match("/^[^\.]{1,63}(\.[^\.]{1,63})*$/", $domain_name)); //length of each label
-
+            && preg_match("/^.{1,253}$/", $domain_name) //overall length check
+            && preg_match("/^[^\.]{1,63}(\.[^\.]{1,63})*$/", $domain_name)); //length of each label
     }
-
 }

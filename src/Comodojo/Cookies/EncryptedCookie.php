@@ -1,6 +1,8 @@
-<?php namespace Comodojo\Cookies;
+<?php
 
-use \phpseclib\Crypt\AES;
+namespace Comodojo\Cookies;
+
+use \phpseclib3\Crypt\AES;
 use \Comodojo\Exception\CookieException;
 
 /**
@@ -21,14 +23,15 @@ use \Comodojo\Exception\CookieException;
  * THE SOFTWARE.
  */
 
-class EncryptedCookie extends AbstractCookie {
+class EncryptedCookie extends AbstractCookie
+{
 
     /*
-     * AES key
+     * AES cipher
      *
-     * @var int
+     * @var AES
      */
-    private $key = null;
+    private AES $cipher;
 
     /**
      * Encrypted cookie constructor
@@ -41,64 +44,53 @@ class EncryptedCookie extends AbstractCookie {
      *
      * @throws CookieException
      */
-    public function __construct($name, $key, $max_cookie_size = null) {
-
-        if ( empty($key) OR !is_scalar($key) ) throw new CookieException("Invalid secret key");
-
+    public function __construct(string $name, string $key, int $max_cookie_size = null)
+    {
+        if (empty($key) or empty($key)) {
+            throw new CookieException("Invalid secret key");
+        }
+        $this->cipher = self::setupCipher($key);
         parent::__construct($name, $max_cookie_size);
-
     }
 
     /**
      * {@inheritdoc}
      */
-    public function setValue($value, $serialize = true) {
+    public function setValue($value, bool $serialize = true): CookieInterface
+    {
+        if (!is_scalar($value) && $serialize === false) {
+            throw new CookieException("Cannot set non-scalar value without serialization");
+        }
 
-        if ( !is_scalar($value) && $serialize === false ) throw new CookieException("Cannot set non-scalar value without serialization");
+        if ($serialize === true) {
+            $value = serialize($value);
+        }
 
-        if ( $serialize === true ) $value = serialize($value);
-
-        $cipher = new AES(AES::MODE_ECB);
-
-        $cipher->setKeyLength(256);
-
-        $cipher->setKey(self::encryptKey($this->key));
-
-        // added base64 encoding to avoid problems with binary data
-
-        $cookie_value = base64_encode($cipher->encrypt($value));
-
-        if ( strlen($cookie_value) > $this->max_cookie_size ) throw new CookieException("Cookie size larger than ".$this->max_cookie_size." bytes");
-
-        $this->value = $cookie_value;
+        // base64 encoding to avoid problems with binary data
+        $this->value = base64_encode($this->cipher->encrypt($value));
+        if (strlen($this->value) > $this->max_cookie_size) {
+            throw new CookieException("Cookie size larger than " . $this->max_cookie_size . " bytes");
+        }
 
         return $this;
-
     }
 
     /**
      * {@inheritdoc}
      */
-    public function getValue($unserialize = true) {
+    public function getValue(bool $unserialize = true)
+    {
+        $decoded_cookie = base64_decode($this->value);
+        if ($decoded_cookie === false) {
+            throw new CookieException("Cookie data cannot be decoded");
+        }
 
-        $cipher = new AES(AES::MODE_ECB);
+        $cookie = $this->cipher->decrypt($decoded_cookie);
+        if ($cookie === false) {
+            throw new CookieException("Cookie data cannot be dectypted");
+        }
 
-        $cipher->setKeyLength(256);
-
-        $cipher->setKey(self::encryptKey($this->key));
-
-        // added base64 encoding to avoid problems with binary data
-
-        $encoded_cookie = base64_decode($this->value);
-
-        if ( $encoded_cookie === false ) throw new CookieException("Cookie data cannot be decoded");
-
-        $cookie = $cipher->decrypt($encoded_cookie);
-
-        if ( $cookie === false ) throw new CookieException("Cookie data cannot be dectypted");
-
-        return ($unserialize === true) ? unserialize($cookie) : $cookie;
-
+        return $unserialize === true ? unserialize($cookie) : $cookie;
     }
 
     /**
@@ -112,27 +104,15 @@ class EncryptedCookie extends AbstractCookie {
      * @param array $properties
      *  Array of properties cookie should have
      *
-     * @return  EncryptedCookie
+     * @return  CookieInterface
      * @throws  CookieException
      */
-    public static function create($name, $key, array $properties = [], $serialize = true) {
-
-        try {
-
-            $class = get_called_class();
-
-            $cookie = new $class($name, $key);
-
-            CookieTools::setCookieProperties($cookie, $properties, $serialize);
-
-        } catch (CookieException $ce) {
-
-            throw $ce;
-
-        }
-
+    public static function create($name, $key, array $properties = [], $serialize = true): CookieInterface
+    {
+        $class = get_called_class();
+        $cookie = new $class($name, $key);
+        CookieTools::setCookieProperties($cookie, $properties, $serialize);
         return $cookie;
-
     }
 
     /**
@@ -143,40 +123,27 @@ class EncryptedCookie extends AbstractCookie {
      *
      * @param string $key
      *
-     * @return EncryptedCookie
+     * @return CookieInterface
      * @throws CookieException
      */
-    public static function retrieve($name, $key) {
-
-        try {
-
-            $class = get_called_class();
-
-            $cookie = new $class($name, $key);
-
-            $return = $cookie->load();
-
-        } catch (CookieException $ce) {
-
-            throw $ce;
-
-        }
-
-        return $return;
-
+    public static function retrieve(string $name, string $key): CookieInterface
+    {
+        $class = get_called_class();
+        $cookie = new $class($name, $key);
+        return $cookie->load();
     }
 
     /**
-     * Hash the key to generate a valid aes key value
+     * Setup the AES cipher
      *
      * @param string $key
      *
-     * @return string
+     * @return AES
      */
-    protected static function encryptKey($key) {
-
-        return hash('sha256', $key);
-
+    protected static function setupCipher(string $key): AES {
+        $cipher = new AES('ecb');
+        $cipher->setKeyLength(256);
+        $cipher->setKey(hash('md5', $key));
+        return $cipher;
     }
-
 }
