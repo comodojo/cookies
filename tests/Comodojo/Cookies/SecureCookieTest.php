@@ -70,18 +70,6 @@ class SecureCookieTest extends TestCase
         $this->assertEquals($value, $result);
     }
 
-    public function testSetGetArrayValue()
-    {
-        $value = array("this", "is", "a", "sample", "value");
-        $cookie = new SecureCookie('test_cookie', 'test_key');
-
-        $result = $cookie->setValue($value);
-        $this->assertInstanceOf('\Comodojo\Cookies\SecureCookie', $cookie);
-
-        $result = $cookie->getValue();
-        $this->assertEquals($value, $result);
-    }
-
     public function testCreate()
     {
         $cookie = SecureCookie::create('test_cookie', 'test_key');

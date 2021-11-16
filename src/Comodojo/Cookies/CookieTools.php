@@ -2,6 +2,7 @@
 
 namespace Comodojo\Cookies;
 
+use \Comodojo\Exception\CookieException;
 use \Exception;
 
 /**
@@ -41,37 +42,33 @@ class CookieTools
      *      'httponly' => ''
      * ]
      *
-     * @param boolean $serialize
-     *
      * @return CookieInterface
      * @throws Exception
      */
-    public static function setCookieProperties(CookieInterface $cookie, array $properties, bool $serialize)
+    public static function setCookieProperties(CookieInterface $cookie, array $properties)
     {
         foreach ($properties as $property => $value) {
             switch ($property) {
                 case 'value':
-                    $cookie->setValue($value, $serialize);
+                    $cookie->setValue($value);
                     break;
-
                 case 'expire':
                     $cookie->setExpire($value);
                     break;
-
                 case 'path':
                     $cookie->setPath($value);
                     break;
-
                 case 'domain':
                     $cookie->setDomain($value);
                     break;
-
                 case 'secure':
                     $cookie->setSecure($value);
                     break;
-
                 case 'httponly':
                     $cookie->setHttponly($value);
+                    break;
+                default:
+                    throw new CookieException("$property is not a valid cookie property");
                     break;
             }
         }

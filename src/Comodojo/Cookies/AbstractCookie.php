@@ -33,7 +33,7 @@ abstract class AbstractCookie implements CookieInterface
     protected string $name = '';
 
     /**
-     * Cookie value (native string or serialized one)
+     * Cookie value
      *
      * @var string
      */
@@ -125,12 +125,12 @@ abstract class AbstractCookie implements CookieInterface
     /**
      * {@inheritdoc}
      */
-    abstract function setValue($value, bool $serialize = true): CookieInterface;
+    abstract function setValue(string $value): CookieInterface;
 
     /**
      * {@inheritdoc}
      */
-    abstract function getValue(bool $unserialize = true);
+    abstract function getValue(): string;
 
     /**
      * {@inheritdoc}
@@ -156,7 +156,7 @@ abstract class AbstractCookie implements CookieInterface
     public function setDomain(string $domain): CookieInterface
     {
         if (!CookieTools::checkDomain($domain)) {
-            throw new CookieException("Invalid cookie domain");
+            throw new CookieException("Invalid cookie domain: $domain");
         }
 
         $this->domain = $domain;
@@ -229,7 +229,7 @@ abstract class AbstractCookie implements CookieInterface
             $this->secure,
             $this->httponly
         ) === false) {
-            throw new CookieException("Cannot delete cookie");
+            throw new CookieException("Cannot delete cookie: " . $this->name);
         }
         return true;
     }

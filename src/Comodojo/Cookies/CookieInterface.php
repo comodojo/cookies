@@ -57,26 +57,20 @@ interface CookieInterface
      * @param mixed $value
      *   The value of cookie.
      *
-     * @param bool $serialize
-     *   If true, cookie will be serialized (default)
-     *
      * @return self
      *   The invoked object.
      *
      * @throws CookieException
      */
-    public function setValue($value, bool $serialize = true): CookieInterface;
+    public function setValue(string $value): CookieInterface;
 
     /**
      * Get cookie value
      *
-     * @param bool $unserialize
-     *   If true, cookie will be unserialized (default)
-     *
-     * @return mixed
+     * @return string
      *   Value of cookie
      */
-    public function getValue(bool $unserialize = true);
+    public function getValue(): string;
 
     /**
      * Set cookie's expiration time

@@ -113,23 +113,3 @@ Maximum cookie size can be overridden when creating a cookie.
     $cookie = new Cookie('my-cookie', 3000);
 
 .. note:: The real available size of cookie can <4KB due to serialization and (in case) encryption. In case of cookie > 4KB, a `\\Comodojo\\Exception\\CookieException` is raised.
-
-Content serialization
----------------------
-
-By default a cookie will serialize/unserialize it's content prior to be setted/loaded.
-
-This behaviour can be overridden in `Cookie::setValue` and `Cookie::getValue` methods.
-
-.. code-block:: php
-   :linenos:
-
-    <?php
-
-    use \Comodojo\Cookies\Cookie;
-
-    // create a new cookie instance
-    $cookie = new Cookie('my-cookie');
-
-    // set a plain value (no serialization)
-    $cookie->setValue("Lorem ipsum dolor", false);

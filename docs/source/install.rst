@@ -16,4 +16,4 @@ First `install composer`_, then:
 Requirements
 ************
 
-To work properly, `comodojo/cookies`_ requires PHP >=5.4.0.
+To work properly, `comodojo/cookies`_ requires PHP >=7.4.0.

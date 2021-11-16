@@ -63,7 +63,7 @@ class CookieManager
         if ($this->has($name)) {
             unset($this->cookies[$name]);
         } else {
-            throw new CookieException("Cookie is not registered");
+            throw new CookieException("Cookie $name is not registered");
         }
 
         return $this;
@@ -100,7 +100,7 @@ class CookieManager
         if ($this->has($cookie_name)) {
             return $this->cookies[$cookie_name];
         }
-        throw new CookieException("Cookie is not registered");
+        throw new CookieException("Cookie $cookie_name is not registered");
     }
 
     /**

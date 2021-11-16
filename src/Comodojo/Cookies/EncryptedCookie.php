@@ -56,41 +56,33 @@ class EncryptedCookie extends AbstractCookie
     /**
      * {@inheritdoc}
      */
-    public function setValue($value, bool $serialize = true): CookieInterface
+    public function setValue($value): CookieInterface
     {
-        if (!is_scalar($value) && $serialize === false) {
-            throw new CookieException("Cannot set non-scalar value without serialization");
-        }
-
-        if ($serialize === true) {
-            $value = serialize($value);
-        }
-
         // base64 encoding to avoid problems with binary data
-        $this->value = base64_encode($this->cipher->encrypt($value));
-        if (strlen($this->value) > $this->max_cookie_size) {
-            throw new CookieException("Cookie size larger than " . $this->max_cookie_size . " bytes");
+        $value = base64_encode($this->cipher->encrypt($value));
+        if (strlen($value) > $this->max_cookie_size) {
+            throw new CookieException("Cookie " . $this->name . "size larger than " . $this->max_cookie_size . " bytes");
         }
-
+        $this->value = $value;
         return $this;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function getValue(bool $unserialize = true)
+    public function getValue(): string
     {
         $decoded_cookie = base64_decode($this->value);
         if ($decoded_cookie === false) {
-            throw new CookieException("Cookie data cannot be decoded");
+            throw new CookieException("Cookie " . $this->name . " data cannot be decoded");
         }
 
-        $cookie = $this->cipher->decrypt($decoded_cookie);
-        if ($cookie === false) {
-            throw new CookieException("Cookie data cannot be dectypted");
+        $value = $this->cipher->decrypt($decoded_cookie);
+        if ($value === false) {
+            throw new CookieException("Cookie " . $this->name . " data cannot be dectypted");
         }
 
-        return $unserialize === true ? unserialize($cookie) : $cookie;
+        return $value;
     }
 
     /**
@@ -107,11 +99,11 @@ class EncryptedCookie extends AbstractCookie
      * @return  CookieInterface
      * @throws  CookieException
      */
-    public static function create($name, $key, array $properties = [], $serialize = true): CookieInterface
+    public static function create($name, $key, array $properties = []): CookieInterface
     {
         $class = get_called_class();
         $cookie = new $class($name, $key);
-        CookieTools::setCookieProperties($cookie, $properties, $serialize);
+        CookieTools::setCookieProperties($cookie, $properties);
         return $cookie;
     }
 

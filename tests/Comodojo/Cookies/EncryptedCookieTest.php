@@ -73,18 +73,6 @@ class EncryptedCookieTest extends TestCase
         $this->assertEquals($value, $result);
     }
 
-    public function testSetGetArrayValue()
-    {
-        $value = array("this", "is", "a", "sample", "value");
-        $cookie = new EncryptedCookie('test_cookie', 'test_key');
-
-        $result = $cookie->setValue($value);
-        $this->assertInstanceOf('\Comodojo\Cookies\EncryptedCookie', $cookie);
-
-        $result = $cookie->getValue();
-        $this->assertEquals($value, $result);
-    }
-
     public function testCreate()
     {
         $cookie = EncryptedCookie::create('test_cookie', 'test_key');

@@ -21,3 +21,8 @@ tools:
     external_code_coverage:
         timeout: 600
         runs: 3
+        
+build:
+    tests:
+        override:
+            command: "composer run-script test"

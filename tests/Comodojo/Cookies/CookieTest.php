@@ -62,18 +62,6 @@ class CookieTest extends TestCase
         $this->assertEquals($value, $result);
     }
 
-    public function testSetGetArrayValue()
-    {
-        $value = array("this", "is", "a", "sample", "value");
-        $cookie = new Cookie('test_cookie');
-
-        $result = $cookie->setValue($value);
-        $this->assertInstanceOf('\Comodojo\Cookies\Cookie', $cookie);
-
-        $result = $cookie->getValue();
-        $this->assertEquals($value, $result);
-    }
-
     public function testCreate()
     {
         $cookie = Cookie::create('test_cookie');

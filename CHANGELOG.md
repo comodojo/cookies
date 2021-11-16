@@ -1,5 +1,25 @@
 # Changelog
 
+## Version 3.0.0-beta
+
+### Breaking
+- `CookieInterface::setValue()` accepts only strings now and no serialization provided (address https://sonarcloud.io/project/issues?id=comodojo_cookies&issues=AX0l3VoHz93uDyzxLqiG&open=AX0l3VoHz93uDyzxLqiG)
+- `CookieInterface::getValue()` does not provide unserialization anymore (address https://sonarcloud.io/project/issues?id=comodojo_cookies&issues=AX0l3VoHz93uDyzxLqiG&open=AX0l3VoHz93uDyzxLqiG)
+- `CookieManager::register()` was already deprecated and is now removed
+- `CookieManager::unregister()` was already deprecated and is now removed
+- `CookieManager::isRegistered()` was already deprecated and is now removed
+- `CookieManager::delete()` replaces `CookieManager::del()`
+
+### Other
+- PHP min version to 7.4
+- Update phpseclib to 3.0
+- Some exceptions were rephrased
+
+## Version 2.0.0
+
+### Other
+- minor code refactoring
+
 ## Version 2.0.0-beta
 
 ### Added

@@ -28,28 +28,21 @@ class Cookie extends AbstractCookie
     /**
      * {@inheritdoc}
      */
-    public function setValue($value, bool $serialize = true): CookieInterface
+    public function setValue(string $value): CookieInterface
     {
-        if (!is_scalar($value) && $serialize === false) {
-            throw new CookieException("Cannot set non-scalar value without serialization");
+        if (strlen($value) > $this->max_cookie_size) {
+            throw new CookieException("Cookie " . $this->name . "size larger than " . $this->max_cookie_size . " bytes");
         }
-
-        $cookie_value = $serialize === true ? serialize($value) : $value;
-
-        if (strlen($cookie_value) > $this->max_cookie_size) {
-            throw new CookieException("Cookie size larger than " . $this->max_cookie_size . " bytes");
-        }
-        
-        $this->value = $cookie_value;
+        $this->value = $value;
         return $this;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function getValue(bool $unserialize = true)
+    public function getValue(): string
     {
-        return $unserialize ? unserialize($this->value) : $this->value;
+        return $this->value;
     }
 
     /**
@@ -64,11 +57,11 @@ class Cookie extends AbstractCookie
      * @return self
      * @throws CookieException
      */
-    public static function create(string $name, array $properties = [], bool $serialize = true): CookieInterface
+    public static function create(string $name, array $properties = []): CookieInterface
     {
         $class = get_called_class();
         $cookie = new $class($name);
-        CookieTools::setCookieProperties($cookie, $properties, $serialize);
+        CookieTools::setCookieProperties($cookie, $properties);
         return $cookie;
     }
 
